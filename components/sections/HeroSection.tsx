@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import Image from "next/image";
 import { registerGSAP } from "@/lib/gsap";
 import AcousticContour from "../ui/AcousticContour";
+import MusicalScoreStave from "../ui/MusicalScoreStave";
 import { ArrowDown, Volume2 } from "lucide-react";
 
 export default function HeroSection({
@@ -103,6 +104,22 @@ export default function HeroSection({
         {/* Fine Acoustic Wave Contour Line */}
         <div className="hero-contour max-w-3xl mx-auto my-6 md:my-8">
           <AcousticContour />
+        </div>
+
+        {/* Musical Score Stave (Maria Vasilyeva Logic) */}
+        <div className="max-w-2xl mx-auto px-4 my-6">
+          <MusicalScoreStave
+            tempoMarking="Largo misterioso · ♩ = 48"
+            clef="treble"
+            measure="I.1"
+            notes={[
+              { name: "Ab3", freq: 207.65, position: 20, label: "Liebestraum Fundamental" },
+              { name: "C4", freq: 261.63, position: 40, label: "Tonic Harmony" },
+              { name: "Eb4", freq: 311.13, position: 60, label: "Mediant Harmonic" },
+              { name: "Ab4", freq: 415.3, position: 80, label: "Octave Altitude" },
+            ]}
+            onPlayNote={onPlayPreview}
+          />
         </div>
 
         <p className="font-sans text-xs sm:text-sm md:text-base font-light text-foreground/75 max-w-xl mx-auto leading-relaxed px-4">

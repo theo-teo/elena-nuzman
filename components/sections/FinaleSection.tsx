@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import ChapterCard from "../ui/ChapterCard";
 import AcousticContour from "../ui/AcousticContour";
+import CuratorDialogue from "./CuratorDialogue";
 import { CheckCircle2, ArrowRight } from "lucide-react";
 
 export default function FinaleSection() {
@@ -187,6 +188,9 @@ export default function FinaleSection() {
             </div>
           </div>
         </div>
+
+        {/* AI Archival Concierge & Curator Salon */}
+        <CuratorDialogue />
 
         <AcousticContour className="mt-20" />
       </div>

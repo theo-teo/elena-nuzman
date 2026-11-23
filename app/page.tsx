@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import ScrollProgress from "@/components/motion/ScrollProgress";
+import Piano3DStage from "@/components/canvas/Piano3DStage";
 import HeroSection from "@/components/sections/HeroSection";
 import BiographySection from "@/components/sections/BiographySection";
 import PianoStorySection from "@/components/sections/PianoStorySection";
@@ -62,6 +63,9 @@ export default function Home() {
     <div className="relative min-h-screen bg-background text-foreground selection:bg-accent selection:text-background">
       {/* Precision Scroll Progress */}
       <ScrollProgress />
+
+      {/* 3D WebGL Concert Stage & Light Scrub (Noomo & Symphony of Vines Integration) */}
+      <Piano3DStage />
 
       {/* Persistent Philharmonic Navigation */}
       <Header soundOn={soundOn} onToggleSound={toggleSound} />
