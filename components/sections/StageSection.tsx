@@ -1,134 +1,147 @@
 "use client";
 
 import Image from "next/image";
-import SectionLabel from "../ui/SectionLabel";
+import ChapterCard from "../ui/ChapterCard";
+import AcousticContour from "../ui/AcousticContour";
 import { PAST_HIGHLIGHTS, UPCOMING_CONCERTS } from "@/content/concerts";
-import { Calendar, MapPin, ArrowRight } from "lucide-react";
+import { Calendar, MapPin, ArrowRight, Radio } from "lucide-react";
 
 export default function StageSection() {
   return (
-    <section id="stage" className="relative border-t border-line py-36 px-6 md:px-14 bg-surface/30">
-      <div className="mx-auto max-w-[1600px]">
-        <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
-          <div>
-            <SectionLabel chapter="Chapter 06" title="The Stage" />
-            <h2 className="mt-6 font-serif text-3xl font-light sm:text-5xl md:text-6xl text-foreground">
-              The Story <em className="italic text-accent">Comes Alive.</em>
-            </h2>
-          </div>
-          <p className="font-mono text-xs uppercase tracking-widest text-muted">
-            Live Performance History &amp; Tour Schedule
-          </p>
-        </div>
-
-        {/* Full-width Panoramic Stage Visual */}
-        <div className="relative mt-16 aspect-[16/9] md:aspect-[21/9] w-full overflow-hidden rounded-3xl border border-line shadow-2xl">
-          <Image
-            src="/images/real/elena-brandenburger-tor.jpg"
-            alt="Elena Nuzman live at the Brandenburg Gate"
-            fill
-            className="object-cover object-center transition-transform duration-1000 ease-out hover:scale-105"
+    <section
+      id="stage"
+      className="relative w-full border-t border-line/40 py-24 sm:py-32 md:py-40 px-5 md:px-12 bg-background"
+    >
+      <div className="mx-auto max-w-[1500px]">
+        {/* Chapter Header */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-line/40 pb-8">
+          <ChapterCard
+            chapter="Chapter 06"
+            italicPrefix="The"
+            title="Live Stage"
+            subtitle="The story comes alive in resonance. Historic auditoriums, open air broadcasts, and philharmonic halls."
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
-          <div className="absolute bottom-8 left-8 right-8 flex flex-col justify-between gap-4 md:flex-row md:items-end">
-            <div>
-              <span className="font-mono text-xs uppercase tracking-widest text-accent">
-                Historic Headline Performance
-              </span>
-              <p className="mt-2 font-serif text-2xl sm:text-4xl text-foreground font-light">
-                Brandenburger Tor · Silvester Live Broadcast
-              </p>
-              <p className="mt-2 font-sans text-xs sm:text-sm text-foreground/70 max-w-xl">
-                Performing live before millions of television viewers, uniting the classical concert grand with symphonic arena rock.
-              </p>
-            </div>
-            <a href="#inquiries" className="el-btn-primary self-start md:self-auto shrink-0">
-              Book Elena For Your Stage
-              <ArrowRight className="h-3.5 w-3.5" />
-            </a>
+          <div className="font-mono text-[9px] sm:text-[10px] uppercase tracking-widest text-muted/70">
+            Concert Record &amp; Broadcast Archive
           </div>
         </div>
 
-        {/* Concert Program & Tour Season */}
-        <div className="mt-24 grid gap-12 lg:grid-cols-12">
-          {/* Left: Historic Performances Archive */}
-          <div className="lg:col-span-6 space-y-6">
-            <h3 className="font-serif text-2xl text-foreground font-light">
-              Notable Concert Milestones
-            </h3>
-            <p className="font-sans text-xs text-muted max-w-md">
-              Selected historic live concert engagements across European and American auditoriums.
-            </p>
-
-            <div className="divide-y divide-line border-y border-line">
-              {PAST_HIGHLIGHTS.map((c) => (
-                <div key={c.id} className="py-5 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                  <div>
-                    <div className="flex items-center gap-2 font-mono text-[11px] text-accent">
-                      <Calendar className="h-3 w-3" />
-                      <span>{c.date}</span>
-                    </div>
-                    <h4 className="mt-1 font-serif text-xl text-foreground font-light">{c.venue}</h4>
-                    <p className="mt-0.5 flex items-center gap-1.5 font-mono text-[10px] text-muted">
-                      <MapPin className="h-3 w-3" />
-                      <span>{c.city}, {c.country} · {c.program}</span>
-                    </p>
-                  </div>
-                  <span className="self-start sm:self-auto rounded-full border border-line px-3 py-1 font-mono text-[10px] uppercase text-accent bg-surface">
-                    {c.ticketStatus}
-                  </span>
-                </div>
-              ))}
+        {/* Featured Live Milestone: Brandenburger Tor (Fitted, Uncropped) */}
+        <div className="mt-16 border border-line/60 bg-surface/30 p-5 sm:p-8 md:p-12 backdrop-blur-sm">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center">
+            {/* The Authentic Photo - Natural Framing with Matting, NEVER CUT OFF */}
+            <div className="lg:col-span-6 relative aspect-square max-w-md mx-auto w-full overflow-hidden border border-line/60 bg-surface">
+              <Image
+                src="/images/real/elena-brandenburger-tor.jpg"
+                alt="Elena Nuzman live at the Brandenburg Gate New Year's Eve Broadcast"
+                fill
+                sizes="(max-width: 768px) 100vw, 500px"
+                className="object-cover object-center transition-transform duration-700 hover:scale-105"
+              />
+              <div className="absolute top-4 left-4 inline-flex items-center gap-2 border border-line/80 bg-background/80 px-3 py-1 font-mono text-[9px] uppercase tracking-widest text-accent backdrop-blur-md">
+                <Radio className="h-3 w-3 text-red-400 animate-pulse" />
+                <span>Live Broadcast</span>
+              </div>
             </div>
-          </div>
 
-          {/* Right: Verified Tour Season & Empty State */}
-          <div className="lg:col-span-6">
-            <div className="rounded-3xl border border-line bg-surface p-8 md:p-10 shadow-2xl flex flex-col justify-between h-full">
-              <div>
-                <span className="font-mono text-xs uppercase tracking-widest text-accent">
-                  Concert Season 2026 / 2027
-                </span>
-                <h3 className="mt-4 font-serif text-3xl font-light text-foreground">
-                  Upcoming Tour Dates
-                </h3>
-
-                {UPCOMING_CONCERTS.length > 0 ? (
-                  <div className="mt-6 divide-y divide-line">
-                    {UPCOMING_CONCERTS.map((c) => (
-                      <div key={c.id} className="py-4">
-                        <p className="font-serif text-xl">{c.venue}</p>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  /* Data-driven authentic empty state (No fabricated dates) */
-                  <div className="mt-6 rounded-2xl border border-line/60 bg-background/50 p-6 space-y-4">
-                    <div className="h-2 w-2 rounded-full bg-accent animate-ping" />
-                    <h4 className="font-serif text-xl text-foreground font-light">
-                      Season Schedule in Curation
-                    </h4>
-                    <p className="font-sans text-xs text-foreground/70 leading-relaxed">
-                      Upcoming philharmonic recitals, international festival dates, and chamber appearances for the 2026/2027 season are currently being finalized with concert direction.
-                    </p>
-                    <p className="font-mono text-[11px] text-muted">
-                      Patrons and presenters may submit private engagement inquiries directly below.
-                    </p>
-                  </div>
-                )}
+            {/* Narrative & Performance Context */}
+            <div className="lg:col-span-6 space-y-6">
+              <div className="font-mono text-[10px] uppercase tracking-cinematic text-accent">
+                Historic Headline Performance
               </div>
 
-              <div className="mt-8 pt-6 border-t border-line flex items-center justify-between">
-                <span className="font-mono text-[10px] uppercase text-muted">
-                  Booking Management
-                </span>
-                <a href="#inquiries" className="el-btn-ghost text-xs">
-                  Request Performance Dossier
+              <h3 className="font-serif text-3xl sm:text-4xl md:text-5xl font-light text-foreground">
+                Brandenburger Tor · Silvester Broadcast
+              </h3>
+
+              <p className="font-sans text-sm sm:text-base font-light text-foreground/80 leading-relaxed">
+                Before millions of television viewers, Elena took the stage in front of the historic Brandenburg Gate in Berlin, uniting the classical concert grand with symphonic arena rock for a landmark national broadcast.
+              </p>
+
+              <div className="pt-4 border-t border-line/30 space-y-2 font-mono text-xs text-muted">
+                <div className="flex justify-between py-1 border-b border-line/20">
+                  <span>Location</span>
+                  <span className="text-foreground">Brandenburger Tor, Berlin</span>
+                </div>
+                <div className="flex justify-between py-1 border-b border-line/20">
+                  <span>Audience</span>
+                  <span className="text-foreground">Millions live &amp; broadcast</span>
+                </div>
+                <div className="flex justify-between py-1">
+                  <span>Repertoire</span>
+                  <span className="text-accent font-serif">Here I Go Again (Symphonic Crossover)</span>
+                </div>
+              </div>
+
+              <div className="pt-4">
+                <a
+                  href="#inquiries"
+                  className="inline-flex items-center gap-2 rounded-full border border-accent bg-accent/15 px-6 py-3 font-mono text-[10px] md:text-[11px] uppercase tracking-widest text-foreground hover:bg-accent hover:text-background transition"
+                >
+                  <span>Book Elena For Your Auditorium</span>
+                  <ArrowRight className="h-3.5 w-3.5" />
                 </a>
               </div>
             </div>
           </div>
         </div>
+
+        {/* Historic Milestones & Tour Season Schedule */}
+        <div className="mt-20 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
+          {/* Left: Historic Concert Milestones */}
+          <div className="lg:col-span-6 space-y-6">
+            <h4 className="font-serif text-2xl font-light text-foreground">
+              Selected Concert Engagements
+            </h4>
+            <div className="divide-y divide-line/30">
+              {PAST_HIGHLIGHTS.map((item, idx) => (
+                <div key={idx} className="py-4 space-y-1">
+                  <div className="flex items-center justify-between font-mono text-xs">
+                    <span className="text-accent">{item.date}</span>
+                    <span className="text-muted text-[10px] uppercase tracking-wider">
+                      {item.city}, {item.country}
+                    </span>
+                  </div>
+                  <p className="font-serif text-base text-foreground font-light">
+                    {item.venue}
+                  </p>
+                  <p className="font-sans text-xs text-muted font-light">
+                    {item.program} · <span className="text-accent/90">{item.ticketStatus}</span>
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Right: Upcoming Season / Tour Inquiries */}
+          <div className="lg:col-span-6 space-y-6">
+            <h4 className="font-serif text-2xl font-light text-foreground">
+              Current Tour Season &amp; Inquiries
+            </h4>
+            <div className="border border-line/60 bg-surface/30 p-6 md:p-8 space-y-4">
+              <span className="font-mono text-[10px] uppercase tracking-cinematic text-accent block">
+                Booking Status · 2025/2026 Season
+              </span>
+              <p className="font-serif text-xl sm:text-2xl text-foreground font-light">
+                Private recitals, philharmonic hall bookings, and symphonic galas.
+              </p>
+              <p className="font-sans text-xs sm:text-sm text-foreground/75 leading-relaxed font-light">
+                Elena Nuzman accepts a curated number of international solo recitals, orchestral collaborations, and exclusive private salon performances per season. All engagements are coordinated directly with artist management.
+              </p>
+              <div className="pt-4 border-t border-line/40">
+                <a
+                  href="#inquiries"
+                  className="font-mono text-xs uppercase tracking-widest text-accent hover:text-foreground inline-flex items-center gap-2 transition"
+                >
+                  <span>Submit Venue or Gala Request</span>
+                  <ArrowRight className="h-3 w-3" />
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <AcousticContour className="mt-16" />
       </div>
     </section>
   );

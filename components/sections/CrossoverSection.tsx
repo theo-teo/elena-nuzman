@@ -3,8 +3,10 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { registerGSAP } from "@/lib/gsap";
-import SectionLabel from "../ui/SectionLabel";
+import ChapterCard from "../ui/ChapterCard";
+import AcousticContour from "../ui/AcousticContour";
 import VoiceWave from "../VoiceWave";
+import { Award, Volume2 } from "lucide-react";
 
 export default function CrossoverSection({
   onPlayOctave,
@@ -17,35 +19,35 @@ export default function CrossoverSection({
   const OCTAVES = [
     {
       num: "01",
-      name: "1st Octave",
+      name: "Contralto Resonance",
       range: "E3 — B3",
-      timber: "Contralto / Chest Resonance",
       hz: 164.81,
-      desc: "Deep, dark, velvety chest timber. Grounding the Steinway bass strings.",
+      timber: "Velvet Chest Depth",
+      description: "Deep, resonant, grounding the Steinway bass strings with intimate warmth.",
     },
     {
       num: "02",
-      name: "2nd Octave",
+      name: "Mezzo-Soprano Core",
       range: "C4 — B4",
-      timber: "Mezzo-Soprano / Speech Register",
       hz: 261.63,
-      desc: "Lyrical melodic clarity. The core storytelling range of romantic lieder.",
+      timber: "Storytelling Register",
+      description: "Lyrical melodic clarity, conveying romantic lieder and classical nuance.",
     },
     {
       num: "03",
-      name: "3rd Octave",
+      name: "Dramatic Soprano",
       range: "C5 — B5",
-      timber: "Dramatic Soprano / Power Belting",
       hz: 523.25,
-      desc: "The rock crossover explosion. Piercing through full symphonic fortissimos.",
+      timber: "Symphonic Power Belting",
+      description: "Piercing effortlessly through full orchestra fortissimos and stadium arena acoustics.",
     },
     {
       num: "04",
-      name: "4th Octave",
+      name: "Flageolet Stratosphere",
       range: "C6 — E7",
-      timber: "Flageolet & Whistle Stratosphere",
       hz: 1046.5,
-      desc: "Rare operatic altitude. Reaching crystalline frequencies far above concert soprano limits.",
+      timber: "Whistle Altitude",
+      description: "Rare acoustic altitude far above traditional soprano registers, crystalline and pure.",
     },
   ];
 
@@ -54,18 +56,16 @@ export default function CrossoverSection({
 
     const { gsap } = registerGSAP();
     const ctx = gsap.context(() => {
-      // Kinetic statement reveal
       gsap.fromTo(
-        ".crossover-statement",
-        { opacity: 0, y: 50 },
+        ".crossover-heading",
+        { opacity: 0, y: 30 },
         {
           opacity: 1,
           y: 0,
-          duration: 1.2,
-          ease: "power3.out",
+          duration: 1.0,
           scrollTrigger: {
-            trigger: ".crossover-statement",
-            start: "top 80%",
+            trigger: sectionRef.current,
+            start: "top 75%",
           },
         }
       );
@@ -78,93 +78,159 @@ export default function CrossoverSection({
     <section
       ref={sectionRef}
       id="crossover"
-      className="relative border-t border-line py-36 px-6 md:px-14 bg-surface/40 overflow-hidden"
+      className="relative w-full border-t border-line/40 py-24 sm:py-32 md:py-40 px-5 md:px-12 bg-background"
     >
-      <div className="mx-auto max-w-[1600px]">
-        <SectionLabel chapter="Chapter 04" title="Breaking the Score" />
+      <div className="mx-auto max-w-[1500px]">
+        {/* Chapter Header */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-line/40 pb-8">
+          <ChapterCard
+            chapter="Chapter 04"
+            italicPrefix="The"
+            title="Acoustic Compass"
+            subtitle="Classical Meets Contemporary. Four octaves bridging sacred scores and arena rock."
+          />
+          <div className="font-mono text-[9px] sm:text-[10px] uppercase tracking-widest text-muted/70">
+            Vocal Range · E3 (164 Hz) to E7 (2637 Hz)
+          </div>
+        </div>
 
-        {/* Large Statement Headline */}
-        <div className="crossover-statement mt-12 max-w-5xl">
-          <span className="font-mono text-xs uppercase tracking-widest text-accent">
-            Theme · Classical Meets Contemporary
-          </span>
-          <h2 className="mt-6 font-serif text-[clamp(2.5rem,6vw,6.5rem)] font-light leading-[0.96] text-foreground tracking-tight">
-            “SOME BOUNDARIES WERE NEVER MEANT TO BE HEARD.”
-          </h2>
-          <p className="mt-8 font-sans text-sm font-light leading-relaxed text-foreground/75 md:text-base max-w-2xl">
-            Classical concert halls demand restraint. Stadium rock demands total surrender. Elena Nuzman commands both simultaneously. With an extraordinary vocal range spanning four full octaves, she accompanies herself live on the concert grand, dissolving the partition between Franz Liszt and stadium rock.
+        {/* Monumental Kinetic Statement */}
+        <div className="crossover-heading my-16 md:my-24 max-w-4xl">
+          <p className="font-mono text-[10px] sm:text-xs uppercase tracking-cinematic text-accent mb-4">
+            Artistic Manifesto
+          </p>
+          <h3 className="font-serif text-3xl sm:text-5xl md:text-6xl font-light uppercase tracking-tight text-foreground leading-[1.05]">
+            “Some boundaries were never meant to be heard.”
+          </h3>
+          <p className="mt-6 font-sans text-sm sm:text-base font-light text-foreground/75 leading-relaxed max-w-2xl">
+            Conservatory purists draw walls between classical concert grands and popular music. Elena dismantles those walls. Her four-octave voice commands the stage while her hands execute Lisztian virtuosity.
           </p>
         </div>
 
-        {/* Split Layout: 4-Octave Acoustic Visualizer + Live Photo */}
-        <div className="mt-20 grid gap-12 lg:grid-cols-12 lg:items-center">
-          {/* Left Column: Interactive 4-Octave Compass */}
-          <div className="lg:col-span-6 space-y-6">
-            <div className="rounded-2xl border border-line bg-background/80 p-8 shadow-2xl backdrop-blur-md">
-              <div className="flex items-center justify-between border-b border-line pb-4 font-mono text-xs uppercase tracking-widest text-accent">
-                <span>The 4-Octave Acoustic Register</span>
-                <span className="text-muted">E3 to E7</span>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+          {/* Left Column: Interactive 4-Octave Acoustic Compass */}
+          <div className="lg:col-span-7 space-y-6">
+            <div className="border border-line/60 bg-surface/30 p-4 sm:p-6 backdrop-blur-sm">
+              <div className="flex items-center justify-between border-b border-line/40 pb-4">
+                <span className="font-mono text-[10px] uppercase tracking-cinematic text-accent">
+                  Interactive Vocal Spectrum
+                </span>
+                <span className="font-mono text-[9px] uppercase tracking-widest text-muted">
+                  Click Register to Synthesize
+                </span>
               </div>
 
-              {/* Dynamic Soundwave */}
-              <div className="py-8">
-                <VoiceWave fallback={0.8} height={90} />
+              {/* Dynamic Waveform Display */}
+              <div className="py-6 border-b border-line/30 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <VoiceWave active={true} />
+                  <div>
+                    <p className="font-serif text-lg text-foreground">
+                      {OCTAVES[activeOctave].name}
+                    </p>
+                    <p className="font-mono text-[10px] text-accent">
+                      Fundamental: {OCTAVES[activeOctave].hz} Hz · {OCTAVES[activeOctave].range}
+                    </p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => onPlayOctave(OCTAVES[activeOctave].hz)}
+                  className="flex h-9 w-9 items-center justify-center rounded-full border border-accent/40 bg-accent/10 text-accent hover:bg-accent hover:text-background transition"
+                  aria-label="Play acoustic tone"
+                >
+                  <Volume2 className="h-4 w-4" />
+                </button>
               </div>
 
-              {/* Octave Selector Tiles */}
-              <div className="grid grid-cols-2 gap-3 pt-4 border-t border-line">
-                {OCTAVES.map((oct, idx) => (
-                  <button
-                    key={oct.num}
-                    type="button"
-                    onClick={() => {
-                      setActiveOctave(idx);
-                      onPlayOctave(oct.hz);
-                    }}
-                    className={`rounded-xl border p-4 text-left transition ${
-                      activeOctave === idx
-                        ? "border-accent bg-accent/10 shadow-[0_0_15px_rgba(201,184,154,0.25)]"
-                        : "border-line bg-surface/50 hover:border-accent/40"
-                    }`}
-                  >
-                    <div className="flex justify-between font-mono text-[10px] text-accent">
-                      <span>{oct.num}</span>
-                      <span>{oct.range}</span>
-                    </div>
-                    <p className="mt-2 font-serif text-lg text-foreground">{oct.name}</p>
-                    <p className="mt-1 font-mono text-[10px] text-muted">{oct.timber}</p>
-                  </button>
-                ))}
-              </div>
-
-              <div className="mt-6 flex items-center justify-between font-mono text-[10px] uppercase text-muted">
-                <span>Click any register to trigger frequency resonance</span>
-                <span className="text-accent">Live Harmonic Synthesizer</span>
+              {/* Octave Registers (Editorial Linear Flow, No Clunky Cards) */}
+              <div className="divide-y divide-line/30 pt-2">
+                {OCTAVES.map((oct, idx) => {
+                  const isSelected = activeOctave === idx;
+                  return (
+                    <button
+                      key={oct.num}
+                      type="button"
+                      onClick={() => {
+                        setActiveOctave(idx);
+                        onPlayOctave(oct.hz);
+                      }}
+                      className={`group w-full py-4 text-left flex flex-col sm:flex-row sm:items-center justify-between gap-2 transition-colors ${
+                        isSelected ? "text-accent" : "text-foreground hover:text-accent"
+                      }`}
+                    >
+                      <div className="flex items-center gap-4">
+                        <span className="font-mono text-xs text-accent/80 font-medium">
+                          {oct.num}
+                        </span>
+                        <div>
+                          <p className="font-serif text-base sm:text-lg font-light">
+                            {oct.name}
+                          </p>
+                          <p className="font-sans text-xs text-muted font-light">
+                            {oct.description}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="font-mono text-[11px] text-muted group-hover:text-accent text-right shrink-0">
+                        <span>{oct.range}</span>
+                        <span className="block text-[9px] opacity-70">{oct.hz} Hz</span>
+                      </div>
+                    </button>
+                  );
+                })}
               </div>
             </div>
           </div>
 
-          {/* Right Column: Dynamic Stage Photo */}
-          <div className="lg:col-span-6">
-            <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl border border-line bg-surface shadow-2xl">
-              <Image
-                src="/images/real/elena-grand-5.jpg"
-                alt="Elena Nuzman vocal and piano performance"
-                fill
-                className="object-cover object-center transition-transform duration-700 hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-transparent to-transparent" />
-              <div className="absolute bottom-6 left-6 right-6">
-                <span className="font-mono text-[10px] uppercase tracking-widest text-accent">
-                  Dual Mastery
+          {/* Right Column: Authentic Uncut Photographs (Award + Concert Grand) */}
+          <div className="lg:col-span-5 space-y-8">
+            {/* Elena with IMPALA Silver Award (Preserved in full vertical ratio, NEVER cropped) */}
+            <div className="relative border border-line/60 bg-surface/30 p-4 backdrop-blur-sm mx-auto max-w-sm lg:max-w-none">
+              <span className="absolute -top-1 -left-1 text-[10px] font-mono text-accent/60 leading-none">+</span>
+              <span className="absolute -top-1 -right-1 text-[10px] font-mono text-accent/60 leading-none">+</span>
+              <span className="absolute -bottom-1 -left-1 text-[10px] font-mono text-accent/60 leading-none">+</span>
+              <span className="absolute -bottom-1 -right-1 text-[10px] font-mono text-accent/60 leading-none">+</span>
+
+              <div className="relative aspect-[3/4] w-full overflow-hidden bg-surface">
+                <Image
+                  src="/images/real/elena-impala-award.jpg"
+                  alt="Elena Nuzman with IMPALA Silver Award"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 400px"
+                  className="object-cover object-top transition-transform duration-700 ease-out hover:scale-105"
+                />
+              </div>
+
+              <div className="mt-3 pt-3 border-t border-line/40 flex items-center justify-between font-mono text-[9px] uppercase tracking-widest text-muted">
+                <span className="inline-flex items-center gap-1.5 text-accent">
+                  <Award className="h-3 w-3" />
+                  IMPALA Silver Award
                 </span>
-                <p className="mt-1 font-serif text-2xl italic text-foreground">
-                  Singing live while commanding the Steinway grand
-                </p>
+                <span>Liebesträume · 5M+ Streams</span>
+              </div>
+            </div>
+
+            {/* Concert Stage Visual */}
+            <div className="relative border border-line/60 bg-surface/30 p-4 backdrop-blur-sm mx-auto max-w-sm lg:max-w-none">
+              <div className="relative aspect-[4/3] w-full overflow-hidden bg-surface">
+                <Image
+                  src="/images/real/elena-grand-5.jpg"
+                  alt="Elena Nuzman commanding piano and vocal performance"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 400px"
+                  className="object-cover object-top transition-transform duration-700 ease-out hover:scale-105"
+                />
+              </div>
+              <div className="mt-3 pt-3 border-t border-line/40 flex items-center justify-between font-mono text-[9px] uppercase tracking-widest text-muted">
+                <span>Dual Artistry</span>
+                <span className="text-accent">Live Performance</span>
               </div>
             </div>
           </div>
         </div>
+
+        <AcousticContour className="mt-16" />
       </div>
     </section>
   );

@@ -3,149 +3,171 @@
 import { useEffect, useRef } from "react";
 import Image from "next/image";
 import { registerGSAP } from "@/lib/gsap";
-import SectionLabel from "../ui/SectionLabel";
+import ChapterCard from "../ui/ChapterCard";
+import AcousticContour from "../ui/AcousticContour";
 
 export default function PianoStorySection() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const pinSectionRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+
+  const PIANO_MOVEMENTS = [
+    {
+      num: "I",
+      tag: "The Architecture of Touch",
+      headline: "Twelve Thousand Components",
+      description:
+        "A concert grand is a cathedral of physics. Twelve thousand moving parts of hornbeam, felt, brass, and Bavarian spruce. Under Elena's fingers, the mechanical friction dissolves into pure acoustic velocity.",
+      spec: "88 Keys · 243 Tension Strings · 20 Tons of Pressure",
+      image: "/images/atmosphere/piano-hands-keys.png",
+      alt: "Pianist fingers curved over Steinway & Sons ivory keys",
+      aspectRatio: "aspect-[4/3] md:aspect-[16/10]",
+      objectPosition: "object-center",
+    },
+    {
+      num: "II",
+      tag: "Acoustic Reflection",
+      headline: "The Mirror of the Lid",
+      description:
+        "The angled lacquer lid directs sonic energy outward into the concert hall. Every nuance of touch is mirrored both visually in the high-gloss black finish and sonically across the auditorium.",
+      spec: "Cast Iron Harp · Bavarian Spruce Soundboard",
+      image: "/images/real/elena-grand-2.jpg",
+      alt: "Reflections in the Steinway concert grand lacquer lid",
+      aspectRatio: "aspect-[16/10] md:aspect-[3/2]",
+      objectPosition: "object-center",
+    },
+    {
+      num: "III",
+      tag: "Dynamic Sovereignty",
+      headline: "From Pianissimo to Thunder",
+      description:
+        "Every hammer strike is calibrated down to the gram. The touch shifts seamlessly from a 20 dB breath that hangs suspended in silence to an orchestral fortissimo exceeding 110 dB that commands a hundred-piece philharmonic.",
+      spec: "Dynamic Range: 20 dB — 110 dB · Concert D-274",
+      image: "/images/real/elena-grand-1.jpg",
+      alt: "Elena Nuzman at the concert grand",
+      aspectRatio: "aspect-[3/4] md:aspect-[4/5]",
+      objectPosition: "object-top",
+    },
+  ];
 
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const { gsap } = registerGSAP();
     const ctx = gsap.context(() => {
-      const pinEl = pinSectionRef.current;
-      if (!pinEl) return;
-
-      const panels = gsap.utils.toArray<HTMLElement>(".piano-story-step");
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: pinEl,
-          pin: true,
-          scrub: 1.0,
-          start: "top top",
-          end: `+=${panels.length * 900}`,
-          anticipatePin: 1,
-        },
-      });
-
-      panels.forEach((panel, i) => {
-        if (i === 0) return; // First step visible by default
-        tl.fromTo(
-          panel,
-          { opacity: 0, y: 60, scale: 0.96 },
-          { opacity: 1, y: 0, scale: 1, duration: 1, ease: "power2.out" }
+      // Fade in each movement smoothly on scroll
+      const items = gsap.utils.toArray<HTMLElement>(".piano-movement-item");
+      items.forEach((item) => {
+        gsap.fromTo(
+          item,
+          { opacity: 0, y: 40 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 1.0,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: item,
+              start: "top 80%",
+            },
+          }
         );
       });
-    }, containerRef);
+    }, sectionRef);
 
     return () => ctx.revert();
   }, []);
 
-  const STEPS = [
-    {
-      step: "01",
-      title: "Twelve Thousand Components",
-      heading: "The Sovereign Anatomy",
-      body: "A concert grand is a cathedral of physics. Twelve thousand moving parts of hornbeam, felt, brass, and Bavarian spruce. Under Elena's fingers, the sheer weight of mechanical friction dissolves into effortless velocity.",
-      stat: "88 Keys · 243 Tension Strings",
-      image: "/images/real/elena-grand-2.jpg",
-    },
-    {
-      step: "02",
-      title: "The Velocity of Touch",
-      heading: "From Whisper to Thunder",
-      body: "Every felt hammer strike is calibrated down to the gram. The touch shifts seamlessly from a pianissimo breath that hangs suspended in silence to an orchestral fortissimo that shakes the auditorium.",
-      stat: "Dynamic Range: 20 dB — 110 dB",
-      image: "/images/real/elena-grand-3.jpg",
-    },
-    {
-      step: "03",
-      title: "The Soundboard Resonance",
-      heading: "Where Bone Meets Bronze",
-      body: "The instrument does not stop at the fingertips. It vibrates through bone, breath, and thought. It is the acoustic chamber where Franz Liszt's romantic complexity finds its sovereign modern voice.",
-      stat: "Cast Iron Plate · 20 Tons of Tension",
-      image: "/images/real/elena-grand-4.jpg",
-    },
-  ];
-
   return (
-    <div ref={containerRef} id="piano-story" className="relative border-t border-line">
-      {/* Pinned Cinematic Stage */}
-      <section
-        ref={pinSectionRef}
-        className="relative h-screen w-full overflow-hidden bg-background px-6 md:px-14 flex flex-col justify-center"
-      >
-        <div className="mx-auto w-full max-w-[1600px] h-full flex flex-col justify-between py-12 md:py-20">
-          {/* Top Section Header */}
-          <div className="flex items-center justify-between border-b border-line pb-6">
-            <SectionLabel chapter="Chapter 03" title="The Art of Piano" />
-            <span className="font-mono text-xs uppercase tracking-widest text-muted">
-              Theme · Where discipline becomes expression
-            </span>
+    <section
+      ref={sectionRef}
+      id="piano-story"
+      className="relative w-full border-t border-line/40 py-24 sm:py-32 md:py-40 px-5 md:px-12 bg-background"
+    >
+      <div className="mx-auto max-w-[1500px]">
+        {/* Unseen Studio Style Chapter Header */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-line/40 pb-8">
+          <ChapterCard
+            chapter="Chapter 03"
+            italicPrefix="The"
+            title="Art of Piano"
+            subtitle="Where discipline becomes expression. Deconstructing the sovereign instrument."
+          />
+          <div className="font-mono text-[9px] sm:text-[10px] uppercase tracking-widest text-muted/70">
+            Steinway &amp; Sons D-274 Masterclass
           </div>
+        </div>
 
-          {/* Central Layered Story Presentation */}
-          <div className="relative flex-1 my-auto flex items-center">
-            {STEPS.map((step, idx) => (
+        {/* Narrative Movement Progression (Uncluttered, Uncropped, Mobile-Responsive) */}
+        <div className="mt-16 space-y-24 md:space-y-36">
+          {PIANO_MOVEMENTS.map((mov, idx) => {
+            const isReversed = idx % 2 === 1;
+            return (
               <div
-                key={step.step}
-                className={`piano-story-step absolute inset-0 flex flex-col justify-center ${
-                  idx === 0 ? "opacity-100" : "opacity-0"
-                }`}
+                key={mov.num}
+                className="piano-movement-item grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center"
               >
-                <div className="grid gap-12 lg:grid-cols-12 lg:items-center">
-                  {/* Left: Architectural Story Card */}
-                  <div className="lg:col-span-6 space-y-6">
-                    <div className="flex items-center gap-3">
-                      <span className="font-mono text-xs text-accent">{step.step}</span>
-                      <span className="h-px w-8 bg-accent/40" />
-                      <span className="font-mono text-xs uppercase tracking-widest text-muted">
-                        {step.title}
-                      </span>
-                    </div>
+                {/* Visual Exhibit Column (Never Cropped, Proportional Frame) */}
+                <div
+                  className={`lg:col-span-7 ${
+                    isReversed ? "lg:order-2" : "lg:order-1"
+                  }`}
+                >
+                  <div className="relative border border-line/60 bg-surface/30 p-3 sm:p-4 md:p-6 backdrop-blur-sm">
+                    {/* Corner Crosshairs */}
+                    <span className="absolute -top-1 -left-1 text-[10px] font-mono text-accent/60 leading-none">+</span>
+                    <span className="absolute -top-1 -right-1 text-[10px] font-mono text-accent/60 leading-none">+</span>
+                    <span className="absolute -bottom-1 -left-1 text-[10px] font-mono text-accent/60 leading-none">+</span>
+                    <span className="absolute -bottom-1 -right-1 text-[10px] font-mono text-accent/60 leading-none">+</span>
 
-                    <h3 className="font-serif text-3xl font-light sm:text-5xl md:text-6xl text-foreground leading-[1.02]">
-                      {step.heading}
-                    </h3>
-
-                    <p className="font-sans text-sm font-light leading-relaxed text-foreground/75 md:text-base max-w-xl">
-                      {step.body}
-                    </p>
-
-                    <div className="pt-4 border-t border-line font-mono text-xs uppercase tracking-widest text-accent">
-                      {step.stat}
-                    </div>
-                  </div>
-
-                  {/* Right: Authentic Macro Visual Frame */}
-                  <div className="lg:col-span-6">
-                    <div className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl border border-line bg-surface shadow-2xl">
+                    <div className={`relative w-full ${mov.aspectRatio} overflow-hidden bg-surface`}>
                       <Image
-                        src={step.image}
-                        alt={step.heading}
+                        src={mov.image}
+                        alt={mov.alt}
                         fill
-                        className="object-cover object-center transition-transform duration-1000 ease-out"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 60vw, 750px"
+                        className={`object-cover ${mov.objectPosition} transition-transform duration-1000 ease-out hover:scale-105`}
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
-                      <div className="absolute bottom-4 left-6 right-6 flex justify-between font-mono text-[10px] uppercase tracking-widest text-muted">
-                        <span>Steinway Acoustic Chamber</span>
-                        <span>0{idx + 1} of 03</span>
-                      </div>
+                    </div>
+
+                    <div className="mt-3 pt-3 border-t border-line/40 flex items-center justify-between font-mono text-[9px] uppercase tracking-widest text-muted">
+                      <span>Movement {mov.num}</span>
+                      <span className="text-accent">{mov.tag}</span>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
 
-          {/* Bottom Scrubbing Indicator */}
-          <div className="border-t border-line pt-4 flex items-center justify-between font-mono text-[10px] uppercase tracking-widest text-muted">
-            <span>Scroll slowly to traverse the instrument</span>
-            <span className="text-accent">ScrollTrigger Scrubbed Pin</span>
-          </div>
+                {/* Narrative Typography Column */}
+                <div
+                  className={`lg:col-span-5 space-y-5 ${
+                    isReversed ? "lg:order-1" : "lg:order-2"
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="font-mono text-xs text-accent">Movement {mov.num}</span>
+                    <span className="h-px w-8 bg-accent/40" />
+                    <span className="font-mono text-[10px] uppercase tracking-widest text-muted">
+                      {mov.tag}
+                    </span>
+                  </div>
+
+                  <h3 className="font-serif text-3xl sm:text-4xl md:text-5xl font-light text-foreground leading-[1.05]">
+                    {mov.headline}
+                  </h3>
+
+                  <p className="font-sans text-sm sm:text-base font-light text-foreground/75 leading-relaxed">
+                    {mov.description}
+                  </p>
+
+                  <div className="pt-4 border-t border-line/40 font-mono text-[10px] sm:text-xs uppercase tracking-widest text-accent">
+                    {mov.spec}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </div>
-      </section>
-    </div>
+
+        <AcousticContour className="mt-20" />
+      </div>
+    </section>
   );
 }

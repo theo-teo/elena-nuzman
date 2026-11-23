@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Cormorant_Garamond, Inter } from "next/font/google";
+import { Cormorant_Garamond, Inter, Pinyon_Script } from "next/font/google";
 import SmoothScrollProvider from "@/components/motion/SmoothScrollProvider";
 import FilmGrain from "@/components/FilmGrain";
 import "./globals.css";
@@ -16,6 +16,13 @@ const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
   weight: ["200", "300", "400", "500"],
+  display: "swap",
+});
+
+const pinyon = Pinyon_Script({
+  subsets: ["latin"],
+  variable: "--font-script",
+  weight: ["400"],
   display: "swap",
 });
 
@@ -71,7 +78,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${cormorant.variable} ${inter.variable}`}>
+    <html lang="en" className={`${cormorant.variable} ${inter.variable} ${pinyon.variable}`}>
       <body className="bg-background text-foreground antialiased selection:bg-accent selection:text-background">
         <FilmGrain staerke={0.035} />
         <SmoothScrollProvider>{children}</SmoothScrollProvider>

@@ -4,7 +4,15 @@ import { getAnalyser, getSource } from "@/lib/audio";
 
 // Stimmkurve im Geist von KITT: drei Säulen aus Lichtbalken, die Mitte am höchsten,
 // darüber eine Herzschlag-Linie. Glut für Nazar, Türkis für den Menschen am Mikrofon.
-export default function VoiceWave({ fallback = 0, height = 72 }: { fallback?: number; height?: number }) {
+export default function VoiceWave({
+  fallback = 0,
+  height = 72,
+  active,
+}: {
+  fallback?: number;
+  height?: number;
+  active?: boolean;
+}) {
   const ref = useRef<HTMLCanvasElement>(null);
   const fb = useRef(fallback);
   fb.current = fallback;

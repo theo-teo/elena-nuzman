@@ -4,13 +4,13 @@ import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 
 export const NAV_LINKS = [
-  { label: "Overture", href: "#overture" },
-  { label: "The First Note", href: "#first-note" },
-  { label: "The Art of Piano", href: "#piano-story" },
-  { label: "Breaking the Score", href: "#crossover" },
-  { label: "The Music", href: "#music" },
-  { label: "The Stage", href: "#stage" },
-  { label: "Inquiries", href: "#inquiries" },
+  { chapter: "01", label: "The Overture", href: "#overture" },
+  { chapter: "02", label: "The First Note", href: "#first-note" },
+  { chapter: "03", label: "The Art of Piano", href: "#piano-story" },
+  { chapter: "04", label: "Breaking the Score", href: "#crossover" },
+  { chapter: "05", label: "Recorded Works", href: "#music" },
+  { chapter: "06", label: "The Live Stage", href: "#stage" },
+  { chapter: "07", label: "Inquiries", href: "#inquiries" },
 ];
 
 export default function Navigation({ className = "" }: { className?: string }) {

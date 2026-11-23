@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import SectionLabel from "../ui/SectionLabel";
+import ChapterCard from "../ui/ChapterCard";
+import AcousticContour from "../ui/AcousticContour";
 import { ALBUMS, type Album } from "@/content/albums";
-import { Play, ExternalLink, Disc3 } from "lucide-react";
+import { Play, ExternalLink, Disc3, Music2 } from "lucide-react";
 
 export default function MusicSection({
   onPlayTrack,
@@ -22,80 +23,96 @@ export default function MusicSection({
   };
 
   return (
-    <section id="music" className="relative border-t border-line py-36 px-6 md:px-14 bg-background">
-      <div className="mx-auto max-w-[1600px]">
-        <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
-          <div>
-            <SectionLabel chapter="Chapter 05" title="The Music" />
-            <h2 className="mt-6 font-serif text-3xl font-light sm:text-5xl md:text-6xl text-foreground">
-              One Instrument. <em className="italic text-accent">Infinite Emotions.</em>
-            </h2>
+    <section
+      id="music"
+      className="relative w-full border-t border-line/40 py-24 sm:py-32 md:py-40 px-5 md:px-12 bg-background"
+    >
+      <div className="mx-auto max-w-[1500px]">
+        {/* Chapter Header */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-line/40 pb-8">
+          <ChapterCard
+            chapter="Chapter 05"
+            italicPrefix="The"
+            title="Recorded Works"
+            subtitle="One instrument. Infinite emotions. Verified studio and live discography."
+          />
+          <div className="font-mono text-[9px] sm:text-[10px] uppercase tracking-widest text-muted/70">
+            Authorized Master Tapes · 2008 — 2025
           </div>
-          <p className="font-mono text-xs uppercase tracking-widest text-muted">
-            Discography &amp; Authorized Tapes
-          </p>
         </div>
 
-        {/* Featured Album Hero (My Piano And I / Liebesträume) */}
-        <div className="mt-16 rounded-3xl border border-line bg-surface p-8 md:p-12 shadow-2xl">
-          <div className="grid gap-12 lg:grid-cols-12 lg:items-center">
-            {/* Left: Big Cover Presentation */}
+        {/* Featured Album Hero (Uncut 1:1 Studio Artwork Presentation) */}
+        <div className="mt-16 border border-line/60 bg-surface/30 p-5 sm:p-8 md:p-12 backdrop-blur-sm">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center">
+            {/* Left: Square Album Cover (Naturally 1:1, Never Cropped) */}
             <div className="lg:col-span-5">
-              <div className="relative aspect-square w-full max-w-md mx-auto overflow-hidden rounded-2xl border border-line shadow-2xl">
+              <div className="relative aspect-square w-full max-w-sm sm:max-w-md mx-auto overflow-hidden border border-line/60 bg-surface shadow-2xl">
                 <Image
                   src={selectedAlbum.coverImage}
                   alt={selectedAlbum.title}
                   fill
+                  sizes="(max-width: 768px) 100vw, 420px"
                   className="object-cover object-center transition-transform duration-700 hover:scale-105"
                 />
               </div>
             </div>
 
-            {/* Right: Album Metadata & Tracks */}
+            {/* Right: Album Metadata & Selected Tracks */}
             <div className="lg:col-span-7 space-y-6">
-              <div className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-widest text-accent">
-                <Disc3 className="h-4 w-4 animate-spin [animation-duration:8s]" />
+              <div className="inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-cinematic text-accent">
+                <Disc3 className="h-3.5 w-3.5 animate-spin [animation-duration:10s]" />
                 <span>{selectedAlbum.accolade}</span>
               </div>
 
-              <h3 className="font-serif text-3xl sm:text-4xl md:text-5xl font-light text-foreground">
-                {selectedAlbum.title}
-              </h3>
-              <p className="font-mono text-xs uppercase tracking-widest text-muted">
-                {selectedAlbum.subtitle} · {selectedAlbum.year}
-              </p>
+              <div>
+                <h3 className="font-serif text-3xl sm:text-4xl md:text-5xl font-light text-foreground">
+                  {selectedAlbum.title}
+                </h3>
+                <p className="font-mono text-[11px] uppercase tracking-widest text-muted mt-1">
+                  {selectedAlbum.subtitle} · Release {selectedAlbum.year}
+                </p>
+              </div>
 
-              <p className="font-sans text-sm font-light leading-relaxed text-foreground/75 md:text-base max-w-xl">
+              <p className="font-sans text-sm font-light leading-relaxed text-foreground/80 max-w-xl">
                 {selectedAlbum.description}
               </p>
 
-              {/* Track Listing */}
-              <div className="border-t border-line pt-6 space-y-3">
-                <p className="font-mono text-[10px] uppercase tracking-widest text-muted">
+              {/* Movement Track Listing */}
+              <div className="border-t border-line/30 pt-5 space-y-2.5">
+                <p className="font-mono text-[9px] uppercase tracking-cinematic text-accent">
                   Featured Movement Tracks
                 </p>
-                <div className="divide-y divide-line/60">
+                <div className="divide-y divide-line/20">
                   {selectedAlbum.tracks.map((tr) => (
-                    <div key={tr.number} className="py-2.5 flex items-center justify-between font-mono text-xs text-foreground/80">
+                    <div
+                      key={tr.number}
+                      className="py-2 flex items-center justify-between font-mono text-xs text-foreground/85"
+                    >
                       <div className="flex items-center gap-3">
-                        <span className="text-accent">{tr.number}</span>
-                        <span className="font-serif text-base font-light text-foreground">{tr.title}</span>
+                        <span className="text-accent text-[11px]">{tr.number}</span>
+                        <span className="font-serif text-sm sm:text-base text-foreground font-light">
+                          {tr.title}
+                        </span>
                       </div>
-                      <span className="text-muted text-[11px]">{tr.timing}</span>
+                      <span className="text-muted text-[10px]">{tr.timing}</span>
                     </div>
                   ))}
                 </div>
               </div>
 
-              {/* Action Buttons */}
-              <div className="flex flex-wrap items-center gap-4 pt-4 border-t border-line">
+              {/* Action Triggers */}
+              <div className="pt-4 flex flex-wrap items-center gap-4 border-t border-line/30">
                 <button
                   type="button"
                   onClick={() => handlePlay(selectedAlbum)}
-                  className="el-btn-primary"
+                  className="inline-flex items-center gap-2 rounded-full border border-accent bg-accent/15 px-5 py-2.5 font-mono text-[10px] md:text-[11px] uppercase tracking-widest text-foreground hover:bg-accent hover:text-background transition"
                 >
-                  <Play className="h-3.5 w-3.5 fill-current" />
-                  {activePreviewId === selectedAlbum.id ? "Harmonics Resonating..." : "Preview Piano Resonance"}
+                  <Play className="h-3 w-3 fill-current" />
+                  <span>
+                    {activePreviewId === selectedAlbum.id
+                      ? "Harmonics Resonating..."
+                      : "Preview Piano Resonance"}
+                  </span>
                 </button>
 
                 {selectedAlbum.streamingUrl && (
@@ -103,10 +120,10 @@ export default function MusicSection({
                     href={selectedAlbum.streamingUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="el-btn-ghost inline-flex items-center gap-2"
+                    className="inline-flex items-center gap-2 rounded-full border border-line/60 px-5 py-2.5 font-mono text-[10px] md:text-[11px] uppercase tracking-widest text-muted hover:text-foreground hover:border-accent transition"
                   >
                     <span>Stream on Spotify</span>
-                    <ExternalLink className="h-3.5 w-3.5 text-muted" />
+                    <ExternalLink className="h-3 w-3" />
                   </a>
                 )}
               </div>
@@ -114,44 +131,52 @@ export default function MusicSection({
           </div>
         </div>
 
-        {/* Discography Grid Selector */}
-        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
-          {ALBUMS.map((album) => {
-            const isSelected = selectedAlbum.id === album.id;
-            return (
-              <button
-                key={album.id}
-                type="button"
-                onClick={() => handlePlay(album)}
-                className={`group relative text-left rounded-2xl border p-4 transition-all duration-300 ${
-                  isSelected
-                    ? "border-accent bg-surface/90 shadow-[0_0_20px_rgba(201,184,154,0.25)] scale-[1.02]"
-                    : "border-line bg-surface/30 hover:border-accent/40"
-                }`}
-              >
-                <div className="relative aspect-square w-full overflow-hidden rounded-xl border border-line">
-                  <Image
-                    src={album.coverImage}
-                    alt={album.title}
-                    fill
-                    className="object-cover object-center transition duration-500 group-hover:scale-105"
-                  />
-                </div>
-                <div className="mt-4">
-                  <span className="font-mono text-[9px] uppercase tracking-widest text-accent">
-                    {album.year}
-                  </span>
-                  <h4 className="font-serif text-lg text-foreground group-hover:text-accent transition mt-0.5">
-                    {album.title}
-                  </h4>
-                  <p className="font-mono text-[10px] text-muted truncate mt-1">
-                    {album.genre}
-                  </p>
-                </div>
-              </button>
-            );
-          })}
+        {/* Discography Archive Gallery */}
+        <div className="mt-14 space-y-4">
+          <p className="font-mono text-[10px] uppercase tracking-cinematic text-accent">
+            Select Archive Opus
+          </p>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 md:gap-6">
+            {ALBUMS.map((album) => {
+              const isSelected = selectedAlbum.id === album.id;
+              return (
+                <button
+                  key={album.id}
+                  type="button"
+                  onClick={() => handlePlay(album)}
+                  className={`group relative text-left p-3 border transition-all duration-300 ${
+                    isSelected
+                      ? "border-accent bg-surface/80"
+                      : "border-line/40 bg-surface/20 hover:border-accent/50"
+                  }`}
+                >
+                  <div className="relative aspect-square w-full overflow-hidden bg-surface">
+                    <Image
+                      src={album.coverImage}
+                      alt={album.title}
+                      fill
+                      sizes="(max-width: 768px) 50vw, 220px"
+                      className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
+                    />
+                  </div>
+                  <div className="mt-3 space-y-0.5">
+                    <span className="font-mono text-[9px] uppercase tracking-widest text-accent block">
+                      {album.year}
+                    </span>
+                    <h4 className="font-serif text-sm sm:text-base text-foreground font-light truncate group-hover:text-accent transition-colors">
+                      {album.title}
+                    </h4>
+                    <p className="font-sans text-[10px] text-muted truncate font-light">
+                      {album.genre}
+                    </p>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
         </div>
+
+        <AcousticContour className="mt-16" />
       </div>
     </section>
   );

@@ -3,8 +3,8 @@
 import { useEffect, useRef } from "react";
 import Image from "next/image";
 import { registerGSAP } from "@/lib/gsap";
-import MagneticButton from "../ui/MagneticButton";
-import { ArrowDown, Music } from "lucide-react";
+import AcousticContour from "../ui/AcousticContour";
+import { ArrowDown, Volume2 } from "lucide-react";
 
 export default function HeroSection({
   onPlayPreview,
@@ -12,45 +12,43 @@ export default function HeroSection({
   onPlayPreview: () => void;
 }) {
   const sectionRef = useRef<HTMLElement>(null);
-  const titleRef = useRef<HTMLHeadingElement>(null);
-  const imageRef = useRef<HTMLDivElement>(null);
+  const heroContentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const { gsap } = registerGSAP();
     const ctx = gsap.context(() => {
-      // Intro timeline
       const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
       tl.fromTo(
-        ".hero-meta",
-        { opacity: 0, y: -20 },
-        { opacity: 1, y: 0, duration: 1.0, delay: 0.2 }
+        ".hero-eyebrow",
+        { opacity: 0, y: -15 },
+        { opacity: 1, y: 0, duration: 1.0, delay: 0.1 }
       )
         .fromTo(
-          ".hero-title-line",
-          { opacity: 0, y: 80, rotateX: -20 },
-          { opacity: 1, y: 0, rotateX: 0, duration: 1.2, stagger: 0.15 },
+          ".hero-script",
+          { opacity: 0, scale: 0.9, y: 20 },
+          { opacity: 1, scale: 1, y: 0, duration: 1.2 },
           "-=0.6"
         )
         .fromTo(
-          ".hero-sub",
-          { opacity: 0, y: 30 },
-          { opacity: 1, y: 0, duration: 1.0 },
-          "-=0.7"
+          ".hero-title-main",
+          { opacity: 0, y: 40 },
+          { opacity: 1, y: 0, duration: 1.2 },
+          "-=0.8"
         )
         .fromTo(
-          ".hero-cta",
-          { opacity: 0, y: 20 },
-          { opacity: 1, y: 0, duration: 0.8, stagger: 0.1 },
+          ".hero-contour",
+          { opacity: 0, scaleX: 0.8 },
+          { opacity: 1, scaleX: 1, duration: 1.4, ease: "power2.out" },
+          "-=0.8"
+        )
+        .fromTo(
+          ".hero-stage-card",
+          { opacity: 0, y: 40 },
+          { opacity: 1, y: 0, duration: 1.2 },
           "-=0.6"
-        )
-        .fromTo(
-          imageRef.current,
-          { opacity: 0, scale: 1.08 },
-          { opacity: 1, scale: 1, duration: 1.8, ease: "power2.out" },
-          "-=1.4"
         );
     }, sectionRef);
 
@@ -61,86 +59,113 @@ export default function HeroSection({
     <section
       ref={sectionRef}
       id="overture"
-      className="relative flex min-h-[100svh] flex-col justify-end overflow-hidden px-6 pb-16 pt-32 md:px-14 md:pb-20"
+      className="relative min-h-[100svh] w-full flex flex-col justify-between overflow-hidden bg-background px-5 pt-28 pb-12 md:px-12 md:pt-36 md:pb-16"
     >
-      {/* Cinematic Theater Atmosphere Background */}
-      <div className="pointer-events-none absolute inset-0 -z-20 bg-[radial-gradient(ellipse_at_75%_25%,_rgba(201,184,154,0.11)_0%,_rgba(21,20,22,0.6)_45%,_#09090b_85%)]" />
+      {/* Background Concert Spotlight Atmosphere */}
+      <div className="pointer-events-none absolute inset-0 -z-20">
+        <Image
+          src="/images/atmosphere/concert-hall-spotlight.png"
+          alt="Concert Hall Spotlight"
+          fill
+          priority
+          className="object-cover object-center opacity-30 mix-blend-screen scale-105"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/95 via-background/80 to-background" />
+      </div>
 
-      {/* Subtle Burgundy Stage Flare */}
-      <div className="pointer-events-none absolute left-10 top-24 -z-10 h-[500px] w-[500px] rounded-full bg-burgundy/15 blur-[160px]" />
+      {/* Top Movement Tag */}
+      <div className="hero-eyebrow mx-auto max-w-[1600px] w-full flex items-center justify-between text-muted border-b border-line/40 pb-4">
+        <div className="flex items-center gap-2 font-mono text-[10px] md:text-[11px] uppercase tracking-cinematic text-accent">
+          <span className="h-1.5 w-1.5 rounded-full bg-accent animate-ping" />
+          <span>Movement I · The Overture</span>
+        </div>
+        <span className="font-mono text-[9px] md:text-[10px] uppercase tracking-widest text-muted/70">
+          Robert Schumann Hochschule Alumni
+        </span>
+      </div>
 
-      <div className="mx-auto w-full max-w-[1600px]">
-        <div className="grid gap-12 lg:grid-cols-12 lg:items-end">
-          {/* Left Column: Architectural Editorial Typography */}
-          <div className="lg:col-span-7">
-            <div className="hero-meta inline-flex items-center gap-3 border border-line bg-surface/80 px-4 py-1.5 backdrop-blur-md">
-              <span className="h-1.5 w-1.5 rounded-full bg-accent" />
-              <span className="font-mono text-[10px] uppercase tracking-cinematic text-accent">
-                Concert Pianist & 4-Octave Vocalist
-              </span>
-            </div>
+      {/* Center Monumental Typography Lockup (Symphony of Vines Style) */}
+      <div ref={heroContentRef} className="my-auto py-12 md:py-16 text-center max-w-5xl mx-auto w-full">
+        {/* Calligraphic Flourish Script */}
+        <span className="hero-script font-script text-4xl sm:text-6xl md:text-7xl lg:text-8xl text-accent/90 block mb-2 select-none">
+          Between
+        </span>
 
-            <h1
-              ref={titleRef}
-              className="mt-8 font-serif text-[clamp(3rem,8vw,8.5rem)] font-light leading-[0.92] tracking-tight text-foreground"
-            >
-              <span className="hero-title-line block">ELENA NUZMAN</span>
-              <span className="hero-title-line block italic font-normal text-accent tracking-[-0.01em]">
-                BETWEEN SILENCE
-              </span>
-              <span className="hero-title-line block uppercase tracking-tight text-foreground/90">
-                &amp; SOUND.
-              </span>
-            </h1>
+        {/* Monumental Architectural Headline */}
+        <h1 className="hero-title-main font-serif text-[clamp(2.8rem,8.5vw,7.5rem)] font-light uppercase tracking-tight text-foreground leading-[0.92]">
+          Silence &amp; Sound
+        </h1>
 
-            <div className="hero-sub mt-8 max-w-xl border-l border-accent/40 pl-6">
-              <p className="font-sans text-sm font-light leading-relaxed text-foreground/80 md:text-base">
-                Some stories are written in words. Hers is written in music.
-              </p>
-              <p className="mt-2 font-mono text-[11px] uppercase tracking-widest text-muted">
-                Robert Schumann Hochschule Düsseldorf Alumni · Master of Music
-              </p>
-            </div>
+        <p className="mt-4 font-mono text-[10px] sm:text-xs uppercase tracking-cinematic text-accent/80">
+          Elena Nuzman · Concert Grand &amp; Four-Octave Vocalist
+        </p>
 
-            {/* CTAs */}
-            <div className="mt-12 flex flex-wrap items-center gap-4">
-              <MagneticButton
-                href="#first-note"
-                variant="primary"
-                className="hero-cta"
-              >
-                Explore The Story
-                <ArrowDown className="h-3.5 w-3.5" />
-              </MagneticButton>
+        {/* Fine Acoustic Wave Contour Line */}
+        <div className="hero-contour max-w-3xl mx-auto my-6 md:my-8">
+          <AcousticContour />
+        </div>
 
-              <MagneticButton
-                onClick={onPlayPreview}
-                variant="ghost"
-                className="hero-cta"
-              >
-                <Music className="h-3.5 w-3.5 text-accent" />
-                Listen To The Music
-              </MagneticButton>
-            </div>
-          </div>
+        <p className="font-sans text-xs sm:text-sm md:text-base font-light text-foreground/75 max-w-xl mx-auto leading-relaxed px-4">
+          Some stories are written in words. Hers is written in music. An intimate journey through classical virtuosity and transcendent acoustic resonance.
+        </p>
 
-          {/* Right Column: Hero Visual Frame with Elena at the Concert Grand */}
-          <div className="lg:col-span-5">
-            <div
-              ref={imageRef}
-              className="relative aspect-[3/4] w-full overflow-hidden rounded-2xl border border-line bg-surface shadow-2xl"
-            >
+        {/* Responsive Dual Action Triggers */}
+        <div className="mt-8 md:mt-10 flex flex-wrap items-center justify-center gap-4">
+          <a
+            href="#first-note"
+            className="group inline-flex items-center gap-2 rounded-full border border-accent bg-accent/10 px-6 py-3 font-mono text-[10px] md:text-[11px] uppercase tracking-widest text-foreground hover:bg-accent hover:text-background transition-all duration-300"
+          >
+            <span>Explore The Movement</span>
+            <ArrowDown className="h-3.5 w-3.5 transition-transform group-hover:translate-y-0.5" />
+          </a>
+
+          <button
+            type="button"
+            onClick={onPlayPreview}
+            className="group inline-flex items-center gap-2 rounded-full border border-line bg-surface/40 px-6 py-3 font-mono text-[10px] md:text-[11px] uppercase tracking-widest text-muted hover:text-foreground hover:border-accent transition-all duration-300"
+          >
+            <Volume2 className="h-3.5 w-3.5 text-accent group-hover:animate-pulse" />
+            <span>Harmonic Resonance (432 Hz)</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Bottom Curated Artwork Frame: Elena at the Steinway Grand (Uncut) */}
+      <div className="hero-stage-card mx-auto max-w-4xl w-full">
+        <div className="relative border border-line/60 bg-surface/40 p-3 sm:p-4 md:p-6 backdrop-blur-md">
+          {/* Hairline Crosshairs in Corners */}
+          <span className="absolute -top-1 -left-1 text-[10px] font-mono text-accent/60 leading-none">+</span>
+          <span className="absolute -top-1 -right-1 text-[10px] font-mono text-accent/60 leading-none">+</span>
+          <span className="absolute -bottom-1 -left-1 text-[10px] font-mono text-accent/60 leading-none">+</span>
+          <span className="absolute -bottom-1 -right-1 text-[10px] font-mono text-accent/60 leading-none">+</span>
+
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+            {/* The Natural Portrait - Fitted and Framed, NEVER CUT OFF */}
+            <div className="md:col-span-5 relative aspect-[3/4] max-h-[360px] md:max-h-[420px] w-full overflow-hidden bg-surface">
               <Image
                 src="/images/real/elena-grand-1.jpg"
-                alt="Elena Nuzman at the Steinway Concert Grand Piano"
+                alt="Elena Nuzman seated at the Steinway & Sons Concert Grand"
                 fill
                 priority
-                className="object-cover object-center transition-transform duration-1000 ease-out hover:scale-105"
+                sizes="(max-width: 768px) 100vw, 400px"
+                className="object-cover object-top transition-transform duration-1000 ease-out hover:scale-105"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-80" />
-              <div className="absolute bottom-6 left-6 right-6 flex items-center justify-between border-t border-line/50 pt-4 font-mono text-[10px] uppercase tracking-widest text-foreground/60">
-                <span>Steinway &amp; Sons D-274</span>
-                <span className="text-accent">Chapter 01 / 07</span>
+            </div>
+
+            {/* Curated Editorial Metadata */}
+            <div className="md:col-span-7 space-y-4">
+              <div className="font-mono text-[10px] uppercase tracking-cinematic text-accent">
+                Archival Exhibit · Movement I
+              </div>
+              <h2 className="font-serif text-2xl sm:text-3xl text-foreground font-light">
+                The Sovereign Chamber
+              </h2>
+              <p className="font-sans text-xs sm:text-sm text-foreground/70 font-light leading-relaxed">
+                Documented at the Steinway &amp; Sons D-274 concert grand. 88 hand-crafted keys, 243 acoustic tension strings, and a dynamic sensitivity spanning from whisper to thunderous fortissimo.
+              </p>
+              <div className="pt-2 flex items-center justify-between border-t border-line/40 font-mono text-[9px] uppercase tracking-widest text-muted">
+                <span>D-274 · Robert Schumann Saal</span>
+                <span className="text-accent">Opus 01</span>
               </div>
             </div>
           </div>

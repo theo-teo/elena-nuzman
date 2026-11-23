@@ -1,9 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Navigation from "./Navigation";
-import { Volume2, VolumeX, Menu, X } from "lucide-react";
-import { NAV_LINKS } from "./Navigation";
+import Navigation, { NAV_LINKS } from "./Navigation";
+import { X } from "lucide-react";
 
 export default function Header({
   soundOn,
@@ -26,88 +25,129 @@ export default function Header({
   return (
     <>
       <header
-        className={`fixed inset-x-0 top-0 z-50 transition-all duration-700 ${
+        className={`fixed inset-x-0 top-0 z-50 transition-all duration-700 pointer-events-none ${
           scrolled
-            ? "border-b border-line bg-background/85 backdrop-blur-xl py-4"
-            : "bg-transparent py-6"
+            ? "bg-background/90 backdrop-blur-md py-4 border-b border-line/40"
+            : "bg-transparent py-6 md:py-8"
         }`}
       >
-        <div className="mx-auto flex max-w-[1600px] items-center justify-between px-6 md:px-12">
-          {/* Brand Monogram */}
-          <a href="#top" className="group flex flex-col">
-            <span className="font-serif text-lg tracking-[0.22em] text-foreground transition-colors group-hover:text-accent">
-              ELENA <span className="italic text-accent font-normal">NUZMAN</span>
-            </span>
-            <span className="font-mono text-[9px] uppercase tracking-cinematic text-muted/70">
-              Concert Grand & Vocalist
-            </span>
-          </a>
-
-          {/* Desktop Navigation */}
-          <Navigation />
-
-          {/* Action Hub */}
+        <div className="mx-auto flex max-w-[1600px] items-center justify-between px-5 md:px-12 pointer-events-auto">
+          {/* Left: Round Menu Button */}
           <div className="flex items-center gap-3">
             <button
               type="button"
-              onClick={onToggleSound}
-              className="inline-flex items-center gap-2 rounded-full border border-line bg-surface/70 px-4 py-2 font-mono text-[10px] uppercase tracking-widest text-accent hover:border-accent transition"
-              aria-label={soundOn ? "Mute audio preview" : "Experience audio resonance"}
+              onClick={() => setMobileMenuOpen(true)}
+              className="group relative flex h-10 w-10 md:h-11 md:w-11 items-center justify-center rounded-full border border-line bg-surface/60 transition-all duration-500 hover:border-accent hover:scale-105"
+              aria-label="Open Navigation Menu"
             >
-              {soundOn ? (
-                <Volume2 className="h-3.5 w-3.5 text-accent animate-pulse" />
-              ) : (
-                <VolumeX className="h-3.5 w-3.5 text-muted" />
-              )}
-              <span className="hidden sm:inline">
-                {soundOn ? "Sound Active" : "Experience Sound"}
-              </span>
+              <div className="flex flex-col gap-1 items-center">
+                <span className="h-[1.5px] w-4 bg-foreground transition-all duration-300 group-hover:w-5 group-hover:bg-accent" />
+                <span className="h-[1.5px] w-3 bg-foreground transition-all duration-300 group-hover:w-5 group-hover:bg-accent" />
+              </div>
             </button>
+            <span className="hidden sm:inline font-mono text-[10px] uppercase tracking-cinematic text-muted/80">
+              Menu
+            </span>
+          </div>
 
-            <a
-              href="#inquiries"
-              className="hidden sm:inline-flex rounded-full bg-accent px-5 py-2 font-mono text-[10px] font-semibold uppercase tracking-widest text-background hover:bg-foreground transition"
-            >
-              Inquire
-            </a>
+          {/* Center: Brand Monogram / Identity */}
+          <a href="#top" className="group flex flex-col items-center text-center">
+            <span className="font-serif text-sm sm:text-base tracking-[0.28em] text-foreground transition-colors group-hover:text-accent">
+              ELENA <span className="font-script text-accent text-lg sm:text-xl font-normal lowercase tracking-normal">between</span> NUZMAN
+            </span>
+            <span className="font-mono text-[8px] sm:text-[9px] uppercase tracking-cinematic text-muted/60">
+              Silence &amp; Sound
+            </span>
+          </a>
 
-            {/* Mobile Hamburger Button */}
+          {/* Right: Round Audio Equalizer Button (Unseen Studio Signature) */}
+          <div className="flex items-center gap-3">
+            <span className="hidden sm:inline font-mono text-[9px] uppercase tracking-widest text-muted/70">
+              {soundOn ? "432 Hz Active" : "Acoustic Resonance"}
+            </span>
+
             <button
               type="button"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden flex h-10 w-10 items-center justify-center rounded-full border border-line text-foreground"
-              aria-label="Toggle navigation"
+              onClick={onToggleSound}
+              className="group relative flex h-10 w-10 md:h-11 md:w-11 items-center justify-center rounded-full border border-line bg-surface/60 transition-all duration-500 hover:border-accent hover:scale-105"
+              aria-label={soundOn ? "Mute piano resonance" : "Play piano resonance"}
+              title={soundOn ? "Mute audio" : "Harmonic Steinway resonance"}
             >
-              {mobileMenuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+              <div className="flex items-center gap-[3px] h-3.5">
+                <span
+                  className={`w-[1.5px] rounded-full transition-all duration-300 ${
+                    soundOn
+                      ? "h-3.5 bg-accent animate-pulse [animation-duration:600ms]"
+                      : "h-1 bg-muted group-hover:bg-foreground"
+                  }`}
+                />
+                <span
+                  className={`w-[1.5px] rounded-full transition-all duration-300 ${
+                    soundOn
+                      ? "h-2 bg-accent animate-pulse [animation-duration:800ms]"
+                      : "h-2 bg-muted group-hover:bg-foreground"
+                  }`}
+                />
+                <span
+                  className={`w-[1.5px] rounded-full transition-all duration-300 ${
+                    soundOn
+                      ? "h-3.5 bg-accent animate-pulse [animation-duration:500ms]"
+                      : "h-3 bg-muted group-hover:bg-foreground"
+                  }`}
+                />
+                <span
+                  className={`w-[1.5px] rounded-full transition-all duration-300 ${
+                    soundOn
+                      ? "h-2.5 bg-accent animate-pulse [animation-duration:700ms]"
+                      : "h-1.5 bg-muted group-hover:bg-foreground"
+                  }`}
+                />
+              </div>
             </button>
           </div>
         </div>
       </header>
 
-      {/* Mobile Drawer Menu */}
+      {/* Fullscreen Editorial Drawer */}
       {mobileMenuOpen && (
-        <div className="lg:hidden fixed inset-0 z-40 bg-background/95 backdrop-blur-2xl flex flex-col justify-center px-10 pt-20">
-          <div className="flex flex-col gap-6">
-            {NAV_LINKS.map((link, idx) => (
-              <a
-                key={link.href}
-                href={link.href}
-                onClick={() => setMobileMenuOpen(false)}
-                className="font-serif text-2xl text-foreground hover:text-accent transition flex items-center justify-between border-b border-line pb-4"
-              >
-                <span>{link.label}</span>
-                <span className="font-mono text-xs text-accent">0{idx + 1}</span>
-              </a>
-            ))}
-            <div className="pt-6">
-              <a
-                href="#inquiries"
-                onClick={() => setMobileMenuOpen(false)}
-                className="el-btn-primary w-full text-center"
-              >
-                Booking & Inquiries
-              </a>
+        <div className="fixed inset-0 z-50 flex flex-col justify-between bg-background/95 backdrop-blur-2xl p-6 md:p-14 animate-fadeIn">
+          <div className="flex items-center justify-between border-b border-line pb-6">
+            <div className="font-mono text-xs uppercase tracking-cinematic text-accent">
+              Navigation Index · Elena Nuzman
             </div>
+            <button
+              type="button"
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-line hover:border-accent transition"
+              aria-label="Close menu"
+            >
+              <X className="h-5 w-5 text-foreground" />
+            </button>
+          </div>
+
+          <div className="my-auto py-8">
+            <nav className="flex flex-col gap-4 md:gap-6">
+              {NAV_LINKS.map((link) => (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="group flex items-baseline gap-4 py-2 border-b border-line/30 transition-all duration-300 hover:border-accent"
+                >
+                  <span className="font-mono text-xs text-accent/60 group-hover:text-accent">
+                    {link.chapter}
+                  </span>
+                  <span className="font-serif text-3xl sm:text-5xl md:text-6xl font-light text-foreground group-hover:text-accent group-hover:translate-x-2 transition-transform">
+                    {link.label}
+                  </span>
+                </a>
+              ))}
+            </nav>
+          </div>
+
+          <div className="border-t border-line pt-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 font-mono text-[10px] uppercase tracking-widest text-muted">
+            <span>Robert Schumann Hochschule Düsseldorf</span>
+            <span>Acoustic Concert Grand &amp; Vocalist</span>
           </div>
         </div>
       )}
