@@ -7,15 +7,17 @@
   --paper: 242 239 234;
   --mute: 138 136 140;
   --line: 255 255 255;
-  --accent: 212 175 55; /* Gold / Amber */
+  --accent: 212 175 55; /* Champagne Gold */
   --raised: 14 14 16;
 }
 
-html, body {
+html,
+body {
   background: rgb(var(--ink));
   color: rgb(var(--paper));
   overflow-x: hidden;
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  color-scheme: dark;
 }
 
 ::selection {
@@ -23,58 +25,103 @@ html, body {
   color: rgb(var(--paper));
 }
 
-/* Glas Pillen & Container */
-.ag-glass {
-  background: linear-gradient(180deg, rgb(255 255 255 / 0.07), rgb(255 255 255 / 0.025));
-  border: 1px solid rgb(255 255 255 / 0.09);
-  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.08), 0 10px 40px -20px rgb(0 0 0 / 0.8);
-  backdrop-filter: blur(18px) saturate(1.3);
-  -webkit-backdrop-filter: blur(18px) saturate(1.3);
+@layer components {
+  /* Glas Pillen & Container */
+  .ag-glass {
+    background: linear-gradient(180deg, rgb(255 255 255 / 0.08), rgb(255 255 255 / 0.025));
+    border: 1px solid rgb(255 255 255 / 0.1);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.09), 0 14px 44px -18px rgb(0 0 0 / 0.85);
+    backdrop-filter: blur(20px) saturate(1.35);
+    -webkit-backdrop-filter: blur(20px) saturate(1.35);
+  }
+
+  /* Knoepfe */
+  .ag-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 999px;
+    padding: 0.72rem 1.38rem;
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgb(var(--paper));
+    border: 1px solid rgb(255 255 255 / 0.15);
+    background: rgb(255 255 255 / 0.04);
+    transition: background-color 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+                color 0.7s,
+                border-color 0.7s,
+                box-shadow 0.9s,
+                transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .ag-btn:hover {
+    border-color: rgb(var(--accent) / 0.75);
+    box-shadow: 0 0 0 1px rgb(var(--accent) / 0.3), 0 10px 40px -10px rgb(var(--accent) / 0.5);
+  }
+
+  .ag-btn-solid {
+    background: rgb(var(--accent));
+    color: rgb(var(--ink));
+    border-color: transparent;
+    font-weight: 500;
+  }
+
+  .ag-btn-solid:hover {
+    background: rgb(var(--paper));
+    color: rgb(var(--ink));
+  }
 }
 
-/* Knoepfe */
-.ag-btn {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
+/* Pulsierender Akzentpunkt */
+.ag-dot {
+  width: 6px;
+  height: 6px;
   border-radius: 999px;
-  padding: 0.72rem 1.4rem;
-  font-size: 12px;
-  font-weight: 400;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: rgb(var(--paper));
-  border: 1px solid rgb(255 255 255 / 0.14);
-  background: rgb(255 255 255 / 0.04);
-  transition: background-color 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-              color 0.7s,
-              border-color 0.7s,
-              box-shadow 0.9s;
-}
-
-.ag-btn:hover {
-  border-color: rgb(var(--accent) / 0.7);
-  box-shadow: 0 0 0 1px rgb(var(--accent) / 0.3), 0 10px 40px -10px rgb(var(--accent) / 0.5);
-}
-
-.ag-btn-solid {
   background: rgb(var(--accent));
-  color: rgb(var(--ink));
-  border-color: transparent;
-  font-weight: 500;
+  box-shadow: 0 0 12px rgb(var(--accent));
+  animation: agPulse 2.4s ease-in-out infinite;
 }
 
-.ag-btn-solid:hover {
-  background: rgb(var(--paper));
-  color: rgb(var(--ink));
+@keyframes agPulse {
+  50% {
+    opacity: 0.35;
+  }
+}
+
+/* Emotions-Hero: langsames Heranfahren im aktiven Bild */
+.eh-layer .eh-media {
+  transform: scale(1.06);
+  transition: transform 9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.eh-layer.is-on .eh-media {
+  transform: scale(1);
+}
+
+.ag-fade {
+  animation: agFade 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes agFade {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 /* Kinetische Schrift */
 .kin-w {
   display: inline-block;
   white-space: nowrap;
-  margin-right: 0.28em;
+  margin-right: 0.26em;
 }
 
 .kin-w:last-child {
@@ -95,38 +142,194 @@ html, body {
   transform: none;
 }
 
+/* Lichtkarten mit Maus-Radiallicht */
+.ag-card {
+  position: relative;
+  --x: -400px;
+  --y: -400px;
+  background:
+    radial-gradient(120% 60% at 50% 125%, rgb(var(--accent) / 0.14), rgb(var(--accent) / 0.03) 45%, transparent 70%),
+    linear-gradient(180deg, rgb(255 255 255 / 0.04), rgb(255 255 255 / 0.012));
+  border: 1px solid rgb(255 255 255 / 0.08);
+  transition: transform 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.85s,
+              box-shadow 0.85s;
+}
+
+.ag-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.7s;
+  background: radial-gradient(420px circle at var(--x) var(--y), rgb(var(--accent) / 0.16), transparent 45%);
+}
+
+.ag-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  pointer-events: none;
+  background: radial-gradient(260px circle at var(--x) var(--y), rgb(var(--accent) / 0.85), transparent 60%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.7s;
+}
+
+.ag-cards:hover .ag-card::before,
+.ag-cards:hover .ag-card::after,
+.ag-card:hover::before,
+.ag-card:hover::after {
+  opacity: 1;
+}
+
+.ag-card:hover {
+  transform: translateY(-4px);
+  border-color: rgb(var(--accent) / 0.4);
+  box-shadow: 0 20px 50px -20px rgb(var(--accent) / 0.25);
+}
+
+/* Erlebniswelten / Stage Doors: Tueren, die sich oeffnen */
+@media (min-width: 768px) {
+  .wl-door {
+    flex: 1 1 0;
+    min-width: 0;
+    transition: flex-grow 1.2s cubic-bezier(0.76, 0, 0.24, 1);
+    cursor: pointer;
+  }
+  .wl-door.is-open {
+    flex-grow: 6.5;
+  }
+  .wl-door .wl-copy {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.6s, transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .wl-door.is-open .wl-copy {
+    opacity: 1;
+    transform: none;
+    transition-delay: 0.45s;
+  }
+  .wl-door .wl-vertical {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    transition: opacity 0.6s;
+  }
+  .wl-door.is-open .wl-vertical {
+    opacity: 0;
+  }
+  .wl-door .wl-media {
+    filter: saturate(0.55) brightness(0.55);
+    transform: scale(1.1);
+    transition: filter 1.2s, transform 1.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .wl-door.is-open .wl-media {
+    filter: none;
+    transform: scale(1);
+    animation: wlQuake 0.7s cubic-bezier(0.36, 0.07, 0.19, 0.97) 0.3s both;
+  }
+  .wl-door.is-open .wl-flash {
+    animation: wlFlash 1.4s ease-out 0.25s both;
+  }
+}
+
+@media (max-width: 767px) {
+  .wl-door .wl-vertical {
+    display: none;
+  }
+}
+
+.wl-flash {
+  background: radial-gradient(60% 60% at 50% 55%, rgb(212 175 55 / 0.5), transparent 70%);
+  opacity: 0;
+  mix-blend-mode: screen;
+}
+
+@keyframes wlFlash {
+  0% {
+    opacity: 0;
+  }
+  18% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes wlQuake {
+  10%,
+  90% {
+    transform: translate3d(-1px, 0, 0) scale(1.01);
+  }
+  20%,
+  80% {
+    transform: translate3d(2px, -1px, 0) scale(1.01);
+  }
+  30%,
+  50%,
+  70% {
+    transform: translate3d(-2px, 1px, 0) scale(1.01);
+  }
+  40%,
+  60% {
+    transform: translate3d(2px, 0, 0) scale(1.01);
+  }
+  100% {
+    transform: none;
+  }
+}
+
+/* Laufband */
+.ag-marquee {
+  mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+}
+
+.ag-marquee-track {
+  animation: agMarquee 42s linear infinite;
+}
+
+@keyframes agMarquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* Monumentale Wortmarke im Fuss */
+.ag-wordmark {
+  font-size: clamp(3.2rem, 13.5vw, 14.5rem);
+  line-height: 0.88;
+  background: linear-gradient(180deg, rgb(var(--paper) / 0.85), rgb(var(--accent) / 0.25) 60%, rgb(var(--paper) / 0.03) 95%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .kin-c {
     opacity: 1;
     transform: none;
     transition: none;
   }
-}
-
-/* Lichtkarten */
-.ag-card {
-  background:
-    radial-gradient(120% 60% at 50% 125%, rgb(var(--accent) / 0.12), rgb(var(--accent) / 0.03) 45%, transparent 70%),
-    linear-gradient(180deg, rgb(255 255 255 / 0.035), rgb(255 255 255 / 0.01));
-  border: 1px solid rgb(255 255 255 / 0.08);
-  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.8s, box-shadow 0.8s;
-}
-
-.ag-card:hover {
-  border-color: rgb(var(--accent) / 0.4);
-  box-shadow: 0 0 35px -10px rgb(var(--accent) / 0.25);
-}
-
-/* Pulsierender Akzentpunkt */
-.ag-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 999px;
-  background: rgb(var(--accent));
-  box-shadow: 0 0 12px rgb(var(--accent));
-  animation: agPulse 2.4s ease-in-out infinite;
-}
-
-@keyframes agPulse {
-  50% { opacity: 0.35; }
+  .eh-layer .eh-media,
+  .wl-door,
+  .wl-door .wl-media {
+    transform: none;
+    transition: none;
+    animation: none !important;
+  }
+  .wl-flash {
+    display: none;
+  }
+  .ag-marquee-track,
+  .ag-dot {
+    animation: none;
+  }
 }
