@@ -25,12 +25,24 @@ export default function ScrollStage({ lang }: { lang: Lang }) {
     const imgs = Array.from(el.querySelectorAll<HTMLElement>("[data-beat-img]"));
 
     let loaded = false;
+    let iosUnlocked = false;
     const ensureVideo = () => {
       if (loaded || reduced) return;
       loaded = true;
       vid.src = `/media/cinema-keys${mobile ? "-m" : ""}.mp4`;
       vid.load();
     };
+
+    // iOS Safari requires a gesture-triggered play().then(pause) to unlock currentTime scrubbing
+    const unlockIos = () => {
+      if (iosUnlocked || !vid.src) return;
+      iosUnlocked = true;
+      vid
+        .play()
+        .then(() => vid.pause())
+        .catch(() => {});
+    };
+    window.addEventListener("touchstart", unlockIos, { passive: true, once: true });
 
     const io = new IntersectionObserver(
       ([entry]) => {
@@ -90,6 +102,7 @@ export default function ScrollStage({ lang }: { lang: Lang }) {
     return () => {
       cancelAnimationFrame(raf);
       io.disconnect();
+      window.removeEventListener("touchstart", unlockIos);
     };
   }, [lang]);
 
@@ -131,25 +144,25 @@ export default function ScrollStage({ lang }: { lang: Lang }) {
         />
 
         {/* Pinned Stage Content */}
-        <div className="relative z-10 mx-auto flex h-full max-w-[1440px] flex-col justify-between px-6 pb-12 pt-24 md:px-12 md:pb-16 md:pt-28 lg:px-16">
+        <div className="relative z-10 mx-auto flex h-full max-w-[1440px] flex-col justify-between px-5 pb-10 pt-24 md:px-12 md:pb-16 md:pt-28 lg:px-16">
           {/* Top Chapter Bar */}
           <div className="flex items-center justify-between border-b border-white/10 pb-4">
-            <span className="font-mono text-[11px] uppercase tracking-[0.3em] text-[#d4af37]">
+            <span className="font-mono text-[10px] uppercase tracking-[0.26em] text-[#d4af37] sm:text-[11px] sm:tracking-[0.3em]">
               {t.eyebrow}
             </span>
-            <span className="font-mono text-[11px] uppercase tracking-[0.25em] text-[#f2efea]/40">
+            <span className="hidden font-mono text-[11px] uppercase tracking-[0.25em] text-[#f2efea]/40 sm:inline">
               {lang === "de" ? "Scroll-gesteuerte Bühne" : "Scroll-Scrubbed Stage"}
             </span>
           </div>
 
           {/* Center Grid: Narrative Beat on Left, Authentic Archival Portrait Card on Right */}
-          <div className="grid items-center gap-10 md:grid-cols-12">
-            <div className="relative min-h-[260px] md:col-span-7 lg:col-span-8">
+          <div className="grid items-center gap-8 md:grid-cols-12">
+            <div className="relative min-h-[280px] md:col-span-7 lg:col-span-8">
               {t.beats.map((b, idx) => (
                 <div
                   key={b.num}
                   data-beat
-                  className=" inset-x-0 top-0 transition-none"
+                  className="inset-x-0 top-0 transition-none"
                   style={{
                     position: idx === 0 ? "relative" : "absolute",
                     opacity: idx === 0 ? 1 : 0,
@@ -159,22 +172,40 @@ export default function ScrollStage({ lang }: { lang: Lang }) {
                     <span className="ag-dot" />
                     {b.num}
                   </span>
-                  <h2 className="mt-5 text-[clamp(2rem,5vw,5.2rem)] font-light uppercase leading-[0.98] tracking-[-0.04em] text-[#f2efea]">
+                  <h2 className="mt-4 text-[clamp(1.85rem,4.8vw,5.2rem)] font-light uppercase leading-[0.98] tracking-[-0.035em] text-[#f2efea]">
                     <span className="block">{b.l1}</span>
                     <em className="mt-1 block font-serif italic font-normal normal-case tracking-[-0.02em] text-[#d4af37]">
                       {b.l2}
                     </em>
                   </h2>
-                  <p className="mt-6 max-w-2xl font-sans text-sm font-light leading-relaxed text-[#f2efea]/75 sm:text-base">
+                  <p className="mt-5 max-w-2xl font-sans text-xs font-light leading-relaxed text-[#f2efea]/75 sm:text-base">
                     {b.body}
                   </p>
+
+                  {/* Mobile Compact Archival Photo Badge */}
+                  <div className="ag-glass mt-5 flex items-center gap-3.5 rounded-2xl p-2.5 md:hidden">
+                    <img
+                      src={`${b.img}-m.webp`}
+                      alt={b.caption}
+                      loading="lazy"
+                      className="h-14 w-14 shrink-0 rounded-xl object-cover object-top"
+                    />
+                    <div className="min-w-0">
+                      <span className="block font-mono text-[9px] uppercase tracking-[0.22em] text-[#d4af37]">
+                        {lang === "de" ? "Originalaufnahme" : "Authentic Archival Photo"}
+                      </span>
+                      <p className="truncate font-serif text-sm italic text-[#f2efea]">
+                        {b.caption}
+                      </p>
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
 
-            {/* Authentic Portrait Inset Card */}
+            {/* Desktop Authentic Portrait Inset Card */}
             <div className="hidden md:col-span-5 md:block lg:col-span-4">
-              <div className="ag-glass relative aspect-[4/5] w-full max-w-sm overflow-hidden rounded-2xl p-2 ml-auto">
+              <div className="ag-glass relative ml-auto aspect-[4/5] w-full max-w-sm overflow-hidden rounded-2xl p-2">
                 <div className="relative h-full w-full overflow-hidden rounded-xl">
                   {t.beats.map((b, idx) => (
                     <div
@@ -215,8 +246,8 @@ export default function ScrollStage({ lang }: { lang: Lang }) {
                 className="block h-px w-full origin-left scale-x-0 bg-[#d4af37] shadow-[0_0_12px_#d4af37]"
               />
             </div>
-            <span className="shrink-0 font-mono text-[10px] uppercase tracking-[0.26em] text-[#f2efea]/50">
-              {lang === "de" ? "Chisinau · Paris · Düsseldorf · New York" : "Chisinau · Paris · Düsseldorf · New York"}
+            <span className="shrink-0 font-mono text-[10px] uppercase tracking-[0.22em] text-[#f2efea]/50">
+              Chisinau · Paris · Düsseldorf · NYC
             </span>
           </div>
         </div>

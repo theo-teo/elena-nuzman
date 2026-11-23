@@ -1,60 +1,45 @@
 # Elena Nuzman · The Concert Experience
-> A Grand Piano. Four Octaves. Pure Gravity.
+> A Concert Grand. Four Octaves. Pure Gravity.
 
-Eine massgeschneiderte, filmische Scroll-Telling-Inszenierung für die internationale Konzertpianistin und Crossover-Sängerin **Elena Nuzman**.
+Massgeschneiderte, filmische Scroll-Telling-Inszenierung für die internationale Diplom-Konzertpianistin, Komponistin und Vier-Oktaven-Crossover-Sängerin **Elena Nuzman**.
 
-Entworfen und realisiert von **The Private Studio / Hidden Story**.
-
----
-
-## 1. Künstlerinnen-Dossier
-
-* **Name:** Elena Nuzman
-* **Disziplin:** Konzertpianistin (Diplom Robert Schumann Hochschule Düsseldorf), Vokalistin mit 4 Oktaven Stimmumfang, Komponistin.
-* **Wurzeln:** Geboren 1981 in einer Musikerfamilie (Mutter Nina Kvasowa: Konzertpianistin; Vater Josef Nuzman: Geiger/Schauspieler). Ausbildung ab dem 7. Lebensjahr an Spezialakademien für Hochbegabte in Russland, Frankreich und Deutschland.
-* **Erfolge & Meilensteine:**
-  * Album *Liebesträume* (Adaption von Franz Liszt, Impala Silver Award, Millionen Streams).
-  * Debütalbum *I Believe In You* (Top 10 Newcomer Charts, RTL Album des Jahres).
-  * Album *My Piano And I* (2025).
-  * Headline-Show am Broadway (New York).
-  * Auftritt vor Millionenpublikum am Brandenburger Tor (Berlin) zur Silvesterfeier mit *Here I Go Again*.
-* **Das Alleinstellungsmerkmal:**
-  Sie ist eine der wenigen Künstlerinnen weltweit, die klassische Klaviervirtuosität auf Meisterniveau mit einer rockigen 4-Oktaven-Gesangsstimme verbindet – live, gleichzeitig am Flügel sitzend.
+Entworfen und realisiert nach dem **Private Studio / Hidden Story** Codex.
 
 ---
 
-## 2. Das Problem ihrer bisherigen Webpräsenz (`elena-nuzman.com`)
-* **Status:** Klassische, veraltete Menüstruktur (News, Musik, Videos, Fotos, Presse, Vita, Kontakt).
-* **Defizit:** Keine emotionale Wucht, kein filmisches Storytelling, keine spürbare Exklusivität.
-* **Unsere Chance:** Ein Auftritt auf Koenigsegg-Niveau, der sie von allen herkömmlichen Pianisten abhebt und ihren Marktwert für Gala- und Konzertbuchungen massiv steigert.
+## 1. Architektur & Scroll-Telling-Mechanismen (6 Akte)
+
+1. **Prolog · `EmotionHero` (`components/EmotionHero.tsx`):**
+   * Vier geschichtete 100svh-Kinoszenen mit echten Identitäts-Stills (`fal-ai/flux-pro/kontext` aus Elenas Originalporträts) und bedarfsgesteuerten 5-Sekunden-Kino-Kurzvideos (`fal-ai/kling-video/v2.5-turbo/pro/image-to-video`).
+   * Responsive `<picture>`-Kette (`-m.webp` ab 11 KB für Mobilgeräte, `.webp` für Desktop) sowie separate Mobile- (`-m.mp4` ab 144 KB) und Desktop-Kurzfilme (`.mp4`).
+   * Zweisprachige Echtzeit-Umschaltung (`DE` / `EN`), Liszt-Akkord-Synthesizer (Web Audio API), runde Vorschaubilder und schwebender Anfrage-Knopf (`.eh-ask`).
+2. **Akt I · `Kinetic` Manifest (`components/Kinetic.tsx`):**
+   * Buchstabe für Buchstabe aufsteigende 3D-Typografie (`rotateX(-55deg)`) mit IntersectionObserver und `prefers-reduced-motion`-Respektierung.
+3. **Akt II · `ScrollStage` (`components/ScrollStage.tsx`):**
+   * Gepinnte `320vh`-Bühne mit einzelbildgenauem Scroll-Scrubbing (`-g 1` Keyframe-Kodierung von `cinema-keys.mp4` + iOS-Touch-Freigabe) über drei biografische Kapitel und echte Archivaufnahmen aus Schloss Burg.
+4. **Akt III · `StageDoors` (`components/StageDoors.tsx`):**
+   * Fünf interaktive Bühnentore nebeneinander (`flex-grow: 6.5` in 1200 ms `cubic-bezier`, goldener Lichtstoss `.wl-flash` und laufender Kurzfilm im aktiven Tor; auf Mobilgeräten vertikal gestapelt mit `IntersectionObserver`-Autoplay).
+5. **Akt IV · `VoiceLab` (`components/VoiceLab.tsx` & `components/VoiceWave.tsx`):**
+   * Interaktives Vier-Oktaven-Frequenzlabor (`E3 · 164.8 Hz` bis `E7 · 1046+ Hz`) gekoppelt an die 60fps-Canvas-Stimmkurve und mehrstimmige Steinway-Obertöne.
+   * Vier echte Live-Konzert- und Musikfilme (*Konzert Löwenpalais Berlin*, *Showreel 2025*, *Liebesträume Official*, *Live am Brandenburger Tor*) mit Konzertsaal-Lightbox-Modal.
+6. **Akt V & VI · Diskographie, `PressArchive` (`components/PressArchive.tsx`) & `/api/inquiry`:**
+   * Sechs verifizierte Alben & Singles (*My Piano And I* 2025, *Liebesträume* IMPALA Silver, *I Go Ahead* 2025, *Here I Go Again*, *I Believe In You* RTL Album des Jahres, *Nur die Sieger steh'n im Licht* ABBA-autorisiert).
+   * Fünf echte internationale Magazin-Cover (**Rolling Stone USA**, **Harper's Bazaar USA**, **Vogue Miami**, **Vogue Athens**, **Cosmopolitan UK**) mit mausfolgendem Radiallicht (`--x`, `--y` auf `.ag-card`) und Cover-Reader-Modal.
+   * Diskreter VIP-Buchungs-Concierge (`/api/inquiry`) mit Honeypot-Schutz und Dossier-Referenznummer.
 
 ---
 
-## 3. Die 5 Akte des Scroll-Tellings
+## 2. Start & Medien-Pipeline
 
-1. **Prolog · The Silence (Der ruhende Flügel):**
-   * Tiefes Konzertsaal-Schwarz (#060607). Streiflicht auf dem schwarzen Hochglanz-Lack des Steinway-Flügels.
-   * Ein einziger Klavieranschlag bricht die Stille (Web Audio / Liszt Liebestraum).
-2. **Akt I · The Craft (Die Virtuosität):**
-   * Extreme Makro-Fahrt: Elfenbein, Ebenholz, Hämmer und Saiten unter Spannung.
-   * Vom Wunderkind zur Meisterschülerin der Robert Schumann Hochschule.
-3. **Akt II · The Storm (Vier Oktaven):**
-   * Die Metamorphose: Das Instrument öffnet sich, die Stimme setzt ein.
-   * Der Übergang von intimer Kammermusik zu weltweiter Bühnenwucht (Broadway, Brandenburger Tor).
-4. **Akt III · The Repertoire (Klangwelten zum Hören):**
-   * Interaktiver Flügel-Player: *Liebesträume*, *Here I Go Again*, *My Piano And I*.
-   * Audiovorschau mit Lautstärkeregler und kinetischer Schwingungs-Animation.
-5. **Akt IV · The Legacy (Presse & Kritiken):**
-   * Zitate internationaler Kritiker, New York Times, europäische Feuilletons.
-6. **Finale · The Private Concert (Diskrete Buchung):**
-   * Exklusive Gala-Konzerte, private Salons, internationale Engagements.
-   * Diskretes Buchungs-Terminal (Hermes Inbound Dispatcher).
+```bash
+# Entwicklungsserver auf Port 3031 starten (http://localhost:3031)
+npm run dev
 
----
+# Produktions-Build prüfen (First Load JS ~115 kB)
+npm run build
 
-## 4. Technische Architektur
-
-* **Framework:** Next.js 14 App Router, TypeScript.
-* **Motion & Scroll:** Lenis Smooth Scroll, GSAP ScrollTrigger, direkte CSS-Variablen `--p` für maximale Frameraten (60–120 FPS).
-* **Ästhetik & Licht:** Tiefschwarz (`#060607`), warmes Gold/Messing (`#C4A77D`), Elfenbein (`#F5F2EB`).
-* **Klang:** Web Audio API mit diskretem Sound-Toggle.
+# Medien-Pipeline (Echte Fotos/Cover -> WebP, Flux Kontext Stills, Kling 2.5 Kurzvideos)
+node scripts/master_media_pipeline.mjs real
+node scripts/master_media_pipeline.mjs stills
+node scripts/master_media_pipeline.mjs videos
+```
