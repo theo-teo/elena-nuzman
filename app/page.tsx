@@ -15,6 +15,7 @@ interface Track {
   accolade: string;
   duration: string;
   fundamentalFreq: number;
+  cover: string;
   description: string;
 }
 
@@ -28,6 +29,7 @@ const DISCOGRAPHY: Track[] = [
     accolade: "IMPALA Silver Award · Over 5M Streams",
     duration: "4:12",
     fundamentalFreq: 207.65, // Ab3
+    cover: "/images/real/album-liebestraum.jpg",
     description:
       "A soaring crossover milestone. Elena transforms Liszt’s legendary nocturne into an emotionally charged vocal anthem, uniting the sovereign resonance of the Steinway with her four-octave operatic register.",
   },
@@ -40,6 +42,7 @@ const DISCOGRAPHY: Track[] = [
     accolade: "Featured Masterpiece 2025",
     duration: "3:48",
     fundamentalFreq: 174.61, // F3
+    cover: "/images/real/album-my-piano-and-i.jpg",
     description:
       "Captured in pure acoustic intimacy. Just Elena, the Steinway grand, and a studio microphone. Every breath, felt hammer lift, and harmonic pedal decay speaks of unfiltered truth.",
   },
@@ -52,6 +55,7 @@ const DISCOGRAPHY: Track[] = [
     accolade: "Broadcast Live to Millions on National Television",
     duration: "4:35",
     fundamentalFreq: 293.66, // D4
+    cover: "/images/real/elena-brandenburger-tor.jpg",
     description:
       "Elena’s acclaimed Whitesnake interpretation performed live before an audience of millions at Berlin's iconic Brandenburg Gate, marrying classical discipline with rock-and-roll ecstasy.",
   },
@@ -64,6 +68,7 @@ const DISCOGRAPHY: Track[] = [
     accolade: "RTL Album of the Year · Top 10 German Newcomer Charts",
     duration: "3:56",
     fundamentalFreq: 261.63, // C4
+    cover: "/images/real/elena-press-portrait.jpg",
     description:
       "The album that heralded Elena Nuzman onto the European stage. Voted Album of the Year by RTL and rocketing directly into the Top 10 German newcomer charts.",
   },
@@ -76,6 +81,7 @@ const DISCOGRAPHY: Track[] = [
     accolade: "Personally Authorized by Benny Andersson & Björn Ulvaeus (ABBA)",
     duration: "4:24",
     fundamentalFreq: 220.0, // A3
+    cover: "/images/real/elena-stage-live.jpg",
     description:
       "An exceptionally rare honor: the legendary ABBA founders granted Elena their direct, personal clearance for her German translation and impassioned grand piano arrangement.",
   },
@@ -402,27 +408,37 @@ export default function Home() {
                       : "border-white/[0.08] bg-white/[0.015] hover:border-white/[0.2]"
                   }`}
                 >
-                  <div className="max-w-2xl">
-                    <div className="flex items-center gap-4">
-                      <span className="font-mono text-xs text-[#d4af37]">0{idx + 1}</span>
-                      <h3
-                        className={`font-serif text-2xl font-light transition ${
-                          isSelected ? "text-[#d4af37]" : "text-paper group-hover:text-[#d4af37]"
-                        }`}
-                      >
-                        {track.title}
-                      </h3>
-                      <span className="hidden font-mono text-[11px] text-paper/40 sm:inline">
-                        ({track.year})
+                  <div className="flex flex-col gap-6 sm:flex-row sm:items-center max-w-3xl">
+                    <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-xl border border-white/[0.1]">
+                      <img
+                        src={track.cover}
+                        alt={track.title}
+                        className="h-full w-full object-cover object-center transition duration-500 group-hover:scale-105"
+                      />
+                    </div>
+
+                    <div>
+                      <div className="flex items-center gap-4">
+                        <span className="font-mono text-xs text-[#d4af37]">0{idx + 1}</span>
+                        <h3
+                          className={`font-serif text-2xl font-light transition ${
+                            isSelected ? "text-[#d4af37]" : "text-paper group-hover:text-[#d4af37]"
+                          }`}
+                        >
+                          {track.title}
+                        </h3>
+                        <span className="hidden font-mono text-[11px] text-paper/40 sm:inline">
+                          ({track.year})
+                        </span>
+                      </div>
+                      <p className="mt-2 font-sans text-xs text-paper/70">{track.subtitle}</p>
+                      <p className="mt-3 font-sans text-xs font-light text-paper/50 leading-relaxed">
+                        {track.description}
+                      </p>
+                      <span className="mt-3 inline-block rounded-full border border-[#d4af37]/30 bg-[#d4af37]/5 px-3 py-1 font-mono text-[10px] uppercase tracking-wider text-[#d4af37]">
+                        {track.accolade}
                       </span>
                     </div>
-                    <p className="mt-2 font-sans text-xs text-paper/70">{track.subtitle}</p>
-                    <p className="mt-3 font-sans text-xs font-light text-paper/50 leading-relaxed">
-                      {track.description}
-                    </p>
-                    <span className="mt-3 inline-block rounded-full border border-[#d4af37]/30 bg-[#d4af37]/5 px-3 py-1 font-mono text-[10px] uppercase tracking-wider text-[#d4af37]">
-                      {track.accolade}
-                    </span>
                   </div>
 
                   <div className="mt-6 flex items-center justify-between gap-6 md:mt-0">

@@ -16,44 +16,44 @@ export interface HeroSlide {
 
 export const SLIDES: HeroSlide[] = [
   {
-    id: "radiance",
+    id: "grand-virtuoso",
     title: "Concert Grand & Vocal Radiance",
     location: "Düsseldorf · Robert Schumann Hochschule",
-    tag: "Concert Pianist & 4-Octave Vocalist",
-    img: "/images/hero-radiance.jpg",
+    tag: "Diplom-Konzertpianistin",
+    img: "/images/real/elena-grand-1.jpg",
     quote: "«The concert grand is not just an instrument. It is an extension of bone, thought, and breath.»",
-    year: "Master Diplom",
+    year: "Master Degree",
     freq: 207.65, // Ab3
   },
   {
-    id: "craft",
+    id: "grand-motion",
     title: "The Velocity of Touch",
     location: "Steinway & Sons · 88 Keys",
-    tag: "Acoustic Discipline & Mechanics",
-    img: "/images/craft-hands.jpg",
-    quote: "«Twelve thousand moving parts dissolve into pure human vulnerability.»",
+    tag: "Acoustic Discipline",
+    img: "/images/real/elena-grand-2.jpg",
+    quote: "«Twelve thousand moving parts dissolve into pure acoustic vulnerability.»",
     year: "88 Keys",
     freq: 174.61, // F3
   },
   {
-    id: "vocal",
-    title: "The Metamorphosis",
-    location: "Live Vocal & Solo Grand",
-    tag: "Four Octaves Register",
-    img: "/images/vocal-passion.jpg",
-    quote: "«When the Steinway begins to sing with four full octaves of power.»",
-    year: "E3 — E7",
-    freq: 261.63, // C4
+    id: "brandenburg",
+    title: "Live at the Brandenburg Gate",
+    location: "Berlin Silvester · Millions Broadcast",
+    tag: "Symphonic Rock Headline",
+    img: "/images/real/elena-brandenburger-tor.jpg",
+    quote: "«Classical discipline meets the triumphant ecstasy of stadium rock.»",
+    year: "Live NYE",
+    freq: 293.66, // D4
   },
   {
-    id: "triumph",
-    title: "The Symphony of Stages",
-    location: "Brandenburg Gate · Manhattan Broadway",
-    tag: "Broadcast to Millions",
-    img: "/images/stage-triumph.jpg",
-    quote: "«Classical discipline meets the triumphant ecstasy of stadium rock.»",
-    year: "IMPALA Silver",
-    freq: 293.66, // D4
+    id: "impala",
+    title: "IMPALA Silver Award Laureate",
+    location: "Liebesträume · Franz Liszt Crossover",
+    tag: "Over 5 Million Streams",
+    img: "/images/real/elena-impala-award.jpg",
+    quote: "«When Liszt’s romantic nocturne unites with four octaves of vocal crescendo.»",
+    year: "Silver Award",
+    freq: 261.63, // C4
   },
 ];
 
@@ -80,8 +80,8 @@ export default function EmotionHero({
   }, []);
 
   return (
-    <section id="top" className="relative h-[100svh] w-full overflow-hidden bg-ink text-paper">
-      {/* Layered Cinematic Slides */}
+    <section id="top" className="relative h-[100svh] w-full overflow-hidden bg-[#050506] text-paper">
+      {/* Layered Real Photo Slides */}
       {SLIDES.map((slide, i) => (
         <div
           key={slide.id}
@@ -96,7 +96,7 @@ export default function EmotionHero({
               alt={slide.title}
               fill
               priority={i === 0}
-              className={`h-full w-full object-cover object-center transition-transform duration-[1800ms] ease-out ${
+              className={`h-full w-full object-cover object-center transition-transform duration-[2000ms] ease-out ${
                 i === active ? "scale-100" : "scale-105"
               }`}
             />
@@ -107,11 +107,11 @@ export default function EmotionHero({
       {/* Cinematic Vignette Overlays matching private-studio codex */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/60 via-black/15 to-black/85"
+        className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/70 via-black/25 to-black/90"
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 bg-gradient-to-r from-black/75 via-transparent to-black/40"
+        className="pointer-events-none absolute inset-0 bg-gradient-to-r from-black/85 via-black/20 to-black/60"
       />
 
       {/* Hero Content Container */}
@@ -121,8 +121,8 @@ export default function EmotionHero({
           <div className="max-w-4xl">
             <div className="flex items-center gap-3">
               <span className="ag-dot" />
-              <span className="font-mono text-xs uppercase tracking-[0.3em] text-paper/70">
-                Elena Nuzman · Concert Grand & 4 Octaves
+              <span className="font-mono text-xs uppercase tracking-[0.3em] text-paper/80">
+                Elena Nuzman · Authentic Concert Grand & 4 Octaves
               </span>
             </div>
 
@@ -136,10 +136,10 @@ export default function EmotionHero({
           </div>
 
           <div className="max-w-xs md:pt-4">
-            <p className="font-sans text-sm font-light leading-relaxed text-paper/80 sm:text-base">
+            <p className="font-sans text-sm font-light leading-relaxed text-paper/85 sm:text-base">
               {s.quote}
             </p>
-            <div className="mt-4 flex items-center gap-3 font-mono text-[11px] uppercase tracking-widest text-paper/40">
+            <div className="mt-4 flex items-center gap-3 font-mono text-[11px] uppercase tracking-widest text-[#d4af37]">
               <span>{s.location}</span>
             </div>
           </div>
@@ -164,9 +164,9 @@ export default function EmotionHero({
                   }`}
                 />
                 <span
-                  className={`block h-12 w-12 overflow-hidden rounded-full border transition sm:h-16 sm:w-16 ${
+                  className={`block h-14 w-14 overflow-hidden rounded-full border transition sm:h-18 sm:w-18 ${
                     i === active
-                      ? "border-[#d4af37] shadow-[0_0_20px_rgba(212,175,55,0.35)] scale-105"
+                      ? "border-[#d4af37] shadow-[0_0_20px_rgba(212,175,55,0.4)] scale-105"
                       : "border-paper/20 opacity-60 group-hover:opacity-100"
                   }`}
                 >
