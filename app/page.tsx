@@ -1,8 +1,21 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import Lenis from "lenis";
 import VoiceWave from "@/components/VoiceWave";
+import HarmonicAtmosphere from "@/components/HarmonicAtmosphere";
+import {
+  Play,
+  Volume2,
+  VolumeX,
+  Sparkles,
+  Award,
+  Music,
+  ArrowRight,
+  CheckCircle2,
+  Compass,
+} from "lucide-react";
 
 interface Track {
   id: string;
@@ -14,6 +27,7 @@ interface Track {
   duration: string;
   fundamentalFreq: number; // Hz for Web Audio preview
   description: string;
+  mood: string;
 }
 
 const DISCOGRAPHY: Track[] = [
@@ -22,60 +36,65 @@ const DISCOGRAPHY: Track[] = [
     title: "Liebesträume",
     subtitle: "Franz Liszt No. 3 · Vocal & Orchestral Crossover",
     year: "2016 / 2021",
-    genre: "Romantic Classical · Crossover",
+    genre: "Romantic Classical · Symphonic Pop",
     accolade: "IMPALA Silver Award · Over 5M Global Streams",
     duration: "4:12",
     fundamentalFreq: 207.65, // Ab3
     description:
-      "A monumental crossover milestone. Elena transforms Liszt's legendary nocturne into an emotionally soaring vocal piece, blending the sovereign touch of the Steinway with her four-octave vocal crescendo.",
+      "A radiant triumph of emotional warmth. Elena transforms Franz Liszt's immortal romantic nocturne into a soaring vocal anthem, uniting the sovereign resonance of the Steinway with four octaves of operatic crescendo.",
+    mood: "Lyrical · Passionate · Soaring",
   },
   {
     id: "my-piano-and-i",
     title: "My Piano And I",
-    subtitle: "Solo Concert Grand & Intimate Vocals",
-    year: "2025 Release",
-    genre: "Pure Acoustic Studio Album",
-    accolade: "Featured Studio Release 2025",
+    subtitle: "Solo Concert Grand & Intimate Live Vocals",
+    year: "2025 Studio Album",
+    genre: "Pure Acoustic Grand & Voice",
+    accolade: "Featured Masterpiece 2025",
     duration: "3:48",
     fundamentalFreq: 174.61, // F3
     description:
-      "Recorded in pure analog warmth without synthesis or artificial layers. Elena accompanies herself live on the concert grand, capturing every breath, mechanical damper lift, and harmonic decay.",
+      "Recorded in pure acoustic authenticity. Just Elena, the grand piano, and an unfiltered microphone. Every breath, mechanical hammer release, and rich pedal decay speaks of genuine musical joy.",
+    mood: "Intimate · Radiant · Pure Soul",
   },
   {
     id: "here-i-go-again",
     title: "Here I Go Again",
     subtitle: "Live at the Brandenburg Gate · Symphonic Rock",
-    year: "New Year's Eve Live",
-    genre: "Symphonic Rock & Classical Grand",
+    year: "Berlin NYE Broadcast",
+    genre: "Symphonic Stadium Rock",
     accolade: "Broadcast Live to Millions on National Television",
     duration: "4:35",
     fundamentalFreq: 293.66, // D4
     description:
-      "Her legendary Whitesnake interpretation performed live before an audience of millions at Berlin's Brandenburg Gate. Classical concert hall discipline meets the sheer explosive power of stadium rock.",
+      "Pure unbridled energy. Elena's celebrated rock interpretation performed live before an audience of millions at Berlin's iconic Brandenburg Gate, marrying classical discipline with rock-and-roll ecstasy.",
+    mood: "Triumphant · Electric · Ecstatic",
   },
   {
     id: "i-believe-in-you",
     title: "I Believe In You",
-    subtitle: "Debut Album & Breakthrough Pop-Rock Ballads",
-    year: "Debut",
-    genre: "Classical Crossover & Pop",
+    subtitle: "Debut Studio Album & Breakthrough Ballads",
+    year: "Debut Album",
+    genre: "Classical Crossover Ballads",
     accolade: "RTL Album of the Year · Top 10 German Newcomer Charts",
     duration: "3:56",
     fundamentalFreq: 261.63, // C4
     description:
-      "The album that launched Elena Nuzman onto the international radar. Awarded Album of the Year by RTL and rocketing directly into the Top 10 of Germany's newcomer charts.",
+      "The breakout record that captured European hearts. Voted Album of the Year by RTL and rocketing directly into the Top 10, heralding the arrival of an exceptional dual-threat artist.",
+    mood: "Uplifting · Poignant · Majestic",
   },
   {
     id: "sieger-im-licht",
     title: "Nur die Sieger steh'n im Licht",
     subtitle: "The Winner Takes It All · Official German Adaption",
     year: "Special Release",
-    genre: "Chamber Grand & Dramatic Vocal",
-    accolade: "Authorized Personally by Benny Andersson & Björn Ulvaeus (ABBA)",
+    genre: "Dramatic Chamber Grand",
+    accolade: "Personally Authorized by Benny Andersson & Björn Ulvaeus (ABBA)",
     duration: "4:24",
     fundamentalFreq: 220.0, // A3
     description:
-      "An exceptionally rare honor: the legendary ABBA composers granted their direct, personal clearance for Elena Nuzman's German translation and grand piano interpretation.",
+      "An extraordinary milestone: the legendary ABBA founders granted Elena their rare personal clearance for her German translation and impassioned grand piano arrangement.",
+    mood: "Epic · Nostalgic · Grand",
   },
 ];
 
@@ -84,6 +103,7 @@ export default function Home() {
   const [activeTrack, setActiveTrack] = useState<Track>(DISCOGRAPHY[0]);
   const [isPlayingPreview, setIsPlayingPreview] = useState(false);
   const [bookingTier, setBookingTier] = useState("Philharmonic Hall");
+  const [formSubmitted, setFormSubmitted] = useState(false);
   const audioCtxRef = useRef<AudioContext | null>(null);
 
   // Smooth Scroll via Lenis
@@ -105,8 +125,8 @@ export default function Home() {
     };
   }, []);
 
-  // Web Audio Synthetic Grand Piano Resonator
-  const playChord = (baseFreq = 103.83) => {
+  // Web Audio Synthetic Grand Piano Resonator with Warm Harmonics
+  const playChord = (baseFreq = 207.65) => {
     try {
       const AudioCtx =
         window.AudioContext ||
@@ -116,28 +136,28 @@ export default function Home() {
       audioCtxRef.current = ctx;
       if (ctx.state === "suspended") ctx.resume();
 
-      // Harmonics ratios for warm acoustic grand piano feel
-      const intervals = [1, 1.25, 1.5, 2, 2.5];
-      intervals.forEach((ratio, idx) => {
+      // Warm acoustic grand piano harmonic series (root, 3rd, 5th, octave, 10th)
+      const ratios = [1, 1.25, 1.498, 2, 2.5];
+      ratios.forEach((ratio, idx) => {
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
         osc.type = idx === 0 ? "triangle" : "sine";
         osc.frequency.setValueAtTime(
           baseFreq * ratio,
-          ctx.currentTime + idx * 0.06
+          ctx.currentTime + idx * 0.04
         );
 
         gain.gain.setValueAtTime(0.001, ctx.currentTime);
         gain.gain.exponentialRampToValueAtTime(
-          0.14 / (idx + 1),
-          ctx.currentTime + 0.08 + idx * 0.06
+          0.16 / (idx + 1),
+          ctx.currentTime + 0.06 + idx * 0.04
         );
-        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 3.6);
+        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 3.8);
 
         osc.connect(gain);
         gain.connect(ctx.destination);
-        osc.start(ctx.currentTime + idx * 0.06);
-        osc.stop(ctx.currentTime + 3.8);
+        osc.start(ctx.currentTime + idx * 0.04);
+        osc.stop(ctx.currentTime + 4.0);
       });
       setSoundOn(true);
     } catch {
@@ -154,18 +174,21 @@ export default function Home() {
 
   return (
     <main className="relative min-h-screen bg-ink text-ivory selection:bg-gold selection:text-ink">
-      {/* Top Floating Luxury Navigation */}
-      <header className="fixed inset-x-0 top-0 z-50 flex items-center justify-between border-b border-ivory/5 bg-ink/75 px-6 py-5 backdrop-blur-md md:px-12">
+      {/* Living Ambient Particle Atmosphere (Gold & Amber Motes) */}
+      <HarmonicAtmosphere soundActive={soundOn || isPlayingPreview} />
+
+      {/* Radiant Floating Luxury Navigation */}
+      <header className="fixed inset-x-0 top-0 z-50 flex items-center justify-between border-b border-gold/15 bg-ink/80 px-6 py-5 backdrop-blur-xl md:px-12">
         <a href="#top" className="group flex items-center gap-3">
-          <span className="font-serif text-lg tracking-[0.18em] text-ivory">
+          <span className="font-serif text-lg tracking-[0.2em] text-ivory group-hover:text-gold transition">
             ELENA <span className="font-normal italic text-gold">NUZMAN</span>
           </span>
-          <span className="hidden font-mono text-[10px] uppercase tracking-widest text-ivory/40 sm:inline-block">
-            / Concert Grand & Vocal
+          <span className="hidden font-mono text-[10px] uppercase tracking-widest text-gold/60 sm:inline-block">
+            / Virtuoso Concert Grand & 4-Octave Vocalist
           </span>
         </a>
 
-        <nav className="hidden items-center gap-8 text-[11px] uppercase tracking-[0.25em] text-ivory/60 md:flex">
+        <nav className="hidden items-center gap-8 text-[11px] uppercase tracking-[0.25em] text-ivory/70 md:flex">
           <a href="#virtuosity" className="transition hover:text-gold">
             The Craft
           </a>
@@ -187,82 +210,105 @@ export default function Home() {
           <button
             type="button"
             onClick={() => playChord(activeTrack.fundamentalFreq)}
-            className="inline-flex items-center gap-2 rounded-full border border-ivory/15 bg-ebony/60 px-4 py-2 text-[11px] uppercase tracking-[0.2em] text-ivory/80 backdrop-blur transition hover:border-gold hover:text-gold"
+            className="inline-flex items-center gap-2 rounded-full border border-gold/30 bg-ebony/70 px-4 py-2 text-[11px] uppercase tracking-[0.2em] text-gold backdrop-blur transition hover:bg-gold hover:text-ink"
           >
-            <span
-              className={`h-1.5 w-1.5 rounded-full ${
-                soundOn || isPlayingPreview
-                  ? "bg-gold animate-ping"
-                  : "bg-ivory/30"
-              }`}
-            />
+            {soundOn ? (
+              <Volume2 className="h-3.5 w-3.5 text-gold animate-pulse" />
+            ) : (
+              <VolumeX className="h-3.5 w-3.5 opacity-60" />
+            )}
             {isPlayingPreview
-              ? "Resonating..."
+              ? "Harmonics Resonating..."
               : soundOn
               ? "Re-play Chord"
               : "Experience Sound"}
           </button>
           <a
             href="#booking"
-            className="hidden rounded-full bg-gold px-5 py-2 text-[11px] font-medium uppercase tracking-[0.2em] text-ink transition hover:bg-ivory sm:inline-block"
+            className="hidden rounded-full bg-gold px-5 py-2 text-[11px] font-medium uppercase tracking-[0.2em] text-ink shadow-[0_0_20px_rgba(212,175,55,0.25)] transition hover:bg-ivory sm:inline-block"
           >
             Private Inquiries
           </a>
         </div>
       </header>
 
-      {/* Act I · The Monolith (Prolog & Hero) */}
+      {/* Act I · The Monolith & Radiance (Hero & Prolog) */}
       <section
         id="top"
         className="relative flex min-h-[100svh] flex-col justify-end overflow-hidden px-6 pb-20 pt-36 md:px-12 md:pb-28"
       >
-        {/* Chiaroscuro Atmospheric Background */}
-        <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_50%_15%,_rgba(212,175,55,0.08)_0%,_rgba(18,18,22,0.6)_45%,_#08080a_85%)]" />
+        {/* Dynamic Warm Amber & Golden Radial Stage Backdrop */}
+        <div className="pointer-events-none absolute inset-0 -z-20 bg-[radial-gradient(circle_at_50%_15%,_rgba(232,137,58,0.18)_0%,_rgba(212,175,55,0.08)_35%,_#08080a_80%)]" />
 
-        {/* Ambient Subtle Geometric Soundboard Silhouette */}
-        <div className="pointer-events-none absolute right-4 top-24 -z-10 h-[65vw] max-h-[700px] w-[65vw] max-w-[700px] opacity-15">
-          <svg viewBox="0 0 500 500" className="h-full w-full stroke-gold/40 fill-none" strokeWidth="0.8">
-            <circle cx="250" cy="250" r="240" strokeDasharray="3 6" />
-            <circle cx="250" cy="250" r="180" />
-            <circle cx="250" cy="250" r="110" strokeDasharray="2 4" />
-            <path d="M 50 250 C 150 100, 350 100, 450 250 C 350 400, 150 400, 50 250" />
-            <path d="M 120 180 L 380 320" />
-            <path d="M 120 320 L 380 180" />
-          </svg>
-        </div>
+        {/* Ambient Warm Golden Flare */}
+        <div className="pointer-events-none absolute left-1/2 top-10 -z-10 h-[500px] w-[500px] -translate-x-1/2 rounded-full bg-amber-500/10 blur-[140px]" />
 
         <div className="mx-auto w-full max-w-7xl">
           <div className="flex items-center gap-3">
-            <span className="h-px w-8 bg-gold" />
+            <span className="h-px w-10 bg-gold shadow-[0_0_8px_#d4af37]" />
             <p className="font-mono text-xs uppercase tracking-[0.38em] text-gold">
               Concert Pianist · 4-Octave Vocalist · Composer
             </p>
           </div>
 
           <h1 className="mt-8 font-serif text-[clamp(2.9rem,8.2vw,8.8rem)] font-light leading-[0.92] tracking-tight text-ivory">
-            A CONCERT GRAND.<br />
+            THE PASSION OF KEYS.<br />
             <span className="font-normal italic text-gold">Four octaves.</span><br />
-            PURE GRAVITY.
+            RADIANT GRAVITY.
           </h1>
 
-          <div className="mt-14 grid gap-8 border-t border-line pt-8 md:grid-cols-12 md:items-end">
+          <div className="mt-14 grid gap-8 border-t border-gold/20 pt-8 md:grid-cols-12 md:items-end">
             <div className="md:col-span-7">
-              <p className="max-w-2xl font-sans text-sm font-light leading-relaxed text-ivory/65 md:text-base">
-                Master graduate of the prestigious Robert Schumann University of Music Düsseldorf. 
-                Shattering the classical divide by merging the sovereign touch of Franz Liszt with four octaves of stadium vocal power.
+              <p className="max-w-2xl font-sans text-sm font-light leading-relaxed text-ivory/80 md:text-base">
+                Master graduate of the legendary Robert Schumann University of Music Düsseldorf. 
+                Infusing the sovereign precision of Franz Liszt with the infectious warmth, charisma, and four-octave vocal power that commands international stadium and philharmonic stages.
               </p>
             </div>
-            <div className="flex flex-col items-start gap-1 font-mono text-[11px] uppercase tracking-widest text-ivory/40 md:col-span-5 md:items-end">
-              <span>Robert Schumann Hochschule Alumni</span>
-              <span className="text-gold/80">Impala Silver Award Laureate</span>
+            <div className="flex flex-col items-start gap-1 font-mono text-[11px] uppercase tracking-widest text-ivory/50 md:col-span-5 md:items-end">
+              <span className="text-gold">Robert Schumann Hochschule Master Alumni</span>
+              <span className="text-ivory/80">IMPALA Silver Award Laureate</span>
               <span>Düsseldorf · New York · Worldwide</span>
+            </div>
+          </div>
+
+          {/* Hero Emotional Showcase Image */}
+          <div className="relative mt-14 overflow-hidden rounded-3xl border border-gold/30 bg-ebony shadow-[0_20px_80px_rgba(0,0,0,0.8)]">
+            <div className="relative aspect-[16/9] w-full md:aspect-[21/9]">
+              <Image
+                src="/images/hero-radiance.jpg"
+                alt="Elena Nuzman at the Steinway Concert Grand Piano"
+                fill
+                priority
+                className="object-cover object-center transition duration-700 hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-ink via-transparent to-transparent opacity-80" />
+              <div className="absolute inset-0 bg-gradient-to-r from-ink/60 via-transparent to-transparent" />
+            </div>
+
+            <div className="absolute bottom-6 left-6 right-6 flex flex-col justify-between gap-4 md:bottom-10 md:left-10 md:right-10 md:flex-row md:items-end">
+              <div>
+                <span className="font-mono text-xs uppercase tracking-widest text-gold">
+                  LIVE CONCERT GRAND EXPERIENCE
+                </span>
+                <p className="mt-2 font-serif text-2xl font-light text-ivory md:text-3xl">
+                  «Music is not silent austerity. It is warmth, ecstasy, and human connection.»
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => playChord(207.65)}
+                className="inline-flex items-center gap-3 rounded-full border border-gold/40 bg-ink/80 px-6 py-3 font-mono text-xs uppercase tracking-widest text-gold backdrop-blur transition hover:bg-gold hover:text-ink"
+              >
+                <Sparkles className="h-4 w-4" />
+                Resonate Liszt Chord
+              </button>
             </div>
           </div>
         </div>
       </section>
 
       {/* Act II · The Discipline (88 Tasten & Handwerk) */}
-      <section id="virtuosity" className="border-t border-line py-32 px-6 md:px-12">
+      <section id="virtuosity" className="border-t border-gold/15 py-32 px-6 md:px-12">
         <div className="mx-auto max-w-7xl grid gap-16 md:grid-cols-12 md:items-center">
           <div className="md:col-span-5">
             <span className="font-mono text-xs uppercase tracking-[0.35em] text-gold">
@@ -270,68 +316,54 @@ export default function Home() {
             </span>
             <h2 className="mt-6 font-serif text-4xl font-light leading-tight md:text-6xl">
               88 Keys.<br />
-              <em className="font-normal italic text-gold">Uncompromising discipline.</em>
+              <em className="font-normal italic text-gold">Twelve thousand parts in harmony.</em>
             </h2>
-            <p className="mt-8 text-sm font-light leading-relaxed text-ivory/70 md:text-base">
-              A concert grand piano harbors over twelve thousand individual mechanical components. 
-              Under Elena Nuzman’s hands, it becomes an instrument of telepathic precision—every felt hammer strike calibrated to evoke sheer emotional vulnerability.
+            <p className="mt-8 text-sm font-light leading-relaxed text-ivory/75 md:text-base">
+              A master concert grand is a breathing organism of bronze strings, cast iron, and hornbeam action. Under Elena Nuzman’s hands, mechanical friction dissolves: the keyboard responds with liquid warmth, shifting seamlessly from whispered Lisztian lyricism to percussive stadium rock.
             </p>
 
-            <div className="mt-10 grid grid-cols-2 gap-6 border-t border-line pt-6 text-xs uppercase tracking-widest text-ivory/50">
+            <div className="mt-10 grid grid-cols-2 gap-6 border-t border-gold/15 pt-6 text-xs uppercase tracking-widest text-ivory/60">
               <div>
-                <p className="font-serif text-2xl text-gold">Master</p>
-                <p className="mt-1 font-sans text-[11px] tracking-wider text-ivory/60">Diplom-Konzertpianistin</p>
+                <p className="font-serif text-3xl text-gold">Master</p>
+                <p className="mt-1 font-mono text-[11px] tracking-wider text-ivory/70">
+                  Diplom-Konzertpianistin
+                </p>
               </div>
               <div>
-                <p className="font-serif text-2xl text-gold">Schumann</p>
-                <p className="mt-1 font-sans text-[11px] tracking-wider text-ivory/60">Hochschule Düsseldorf</p>
+                <p className="font-serif text-3xl text-gold">Düsseldorf</p>
+                <p className="mt-1 font-mono text-[11px] tracking-wider text-ivory/70">
+                  Robert Schumann Hochschule
+                </p>
               </div>
             </div>
           </div>
 
-          {/* Luxury Visual Stage Card · Piano Macro Visual Placeholder */}
-          <div className="relative aspect-[4/5] overflow-hidden rounded-2xl border border-gold/20 bg-ebony md:col-span-7">
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(212,175,55,0.06)_0%,_transparent_70%)]" />
-            
-            {/* Elegant Wireframe Schematic Placeholder */}
-            <div className="absolute inset-0 flex flex-col justify-between p-8 md:p-12">
-              <div className="flex items-center justify-between font-mono text-[11px] uppercase tracking-widest text-gold/60">
-                <span>STEINWAY & SONS · CONCERT GRAND</span>
-                <span>88 KEYS · 243 STRINGS</span>
-              </div>
-
-              {/* Graphic Representation of Piano Action & Strings */}
-              <div className="my-auto space-y-3 py-6 opacity-40">
-                <div className="h-px w-full bg-gradient-to-r from-transparent via-gold to-transparent" />
-                <div className="h-px w-3/4 mx-auto bg-gradient-to-r from-transparent via-ivory/30 to-transparent" />
-                <div className="h-px w-1/2 mx-auto bg-gradient-to-r from-transparent via-gold/50 to-transparent" />
-                <div className="flex justify-center gap-2 pt-4">
-                  {[...Array(12)].map((_, i) => (
-                    <div
-                      key={i}
-                      className={`h-16 w-3 rounded-b-sm transition-all duration-300 ${
-                        i % 2 === 0 ? "bg-ivory/80" : "bg-ink border border-ivory/30 h-10 -mt-0.5"
-                      }`}
-                    />
-                  ))}
-                </div>
-              </div>
-
+          {/* Real Emotional Visual: Craft Hands Macro */}
+          <div className="relative aspect-[4/3] overflow-hidden rounded-2xl border border-gold/30 bg-ebony shadow-[0_10px_40px_rgba(212,175,55,0.15)] md:col-span-7">
+            <Image
+              src="/images/craft-hands.jpg"
+              alt="Virtuoso hands on Steinway ivory keys"
+              fill
+              className="object-cover object-center transition duration-700 hover:scale-105"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/20 to-transparent" />
+            <div className="absolute bottom-6 left-6 right-6 flex items-center justify-between">
               <div>
-                <blockquote className="font-serif text-2xl italic leading-relaxed text-ivory/90 md:text-3xl">
-                  «The piano is not just an instrument. It is an extension of bone, thought, and breath.»
-                </blockquote>
-                <p className="mt-4 font-mono text-xs uppercase tracking-widest text-gold/70">
-                  — Elena Nuzman · Concert Pianist
+                <p className="font-mono text-[11px] uppercase tracking-widest text-gold">
+                  ACOUSTIC VELOCITY & TOUCH
+                </p>
+                <p className="font-serif text-lg italic text-ivory">
+                  From pianissimo whisper to forte fortissimo
                 </p>
               </div>
+              <span className="font-mono text-xs text-gold/70">88 KEYS</span>
             </div>
           </div>
         </div>
       </section>
 
       {/* Act III · The Prodigy Roots & Origins (Biografie) */}
-      <section id="biography" className="border-t border-line bg-ebony/30 py-32 px-6 md:px-12">
+      <section id="biography" className="border-t border-gold/15 bg-ebony/30 py-32 px-6 md:px-12">
         <div className="mx-auto max-w-7xl">
           <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
             <div>
@@ -339,11 +371,11 @@ export default function Home() {
                 02 / Origins & Dynasty
               </span>
               <h2 className="mt-6 font-serif text-4xl font-light md:text-6xl">
-                The Heritage of Virtuosity.
+                The Heritage of Musical Joy.
               </h2>
             </div>
-            <p className="max-w-md font-sans text-sm font-light text-ivory/50">
-              Born into a celebrated lineage of classical musicians in Moldova. Playing melodies by ear at age two; touring international concert halls by seventeen.
+            <p className="max-w-md font-sans text-sm font-light text-ivory/60">
+              Born into a celebrated lineage in Moldova. Playing melodies by ear at age two; touring international concert halls across Russia, France, and the USA by seventeen.
             </p>
           </div>
 
@@ -352,33 +384,33 @@ export default function Home() {
               {
                 year: "Age 2",
                 title: "Musical Genesis",
-                desc: "Born 1981 in Moldova to concert pianist Nina Kvasowa and violin virtuoso/actor Josef Nuzman. Began playing complex classical themes strictly by ear.",
+                desc: "Born 1981 in Moldova to concert pianist Nina Kvasowa and violin virtuoso/actor Josef Nuzman. Replicating intricate classical themes strictly by ear.",
               },
               {
                 year: "Age 7",
-                title: "Elite Lyceum",
-                desc: "Admitted to the renowned state academy for prodigies. Rigorous training across Russian, French, and German classical traditions.",
+                title: "Elite Academy",
+                desc: "Admitted to the renowned state lyceum for gifted prodigies. Steeped in the profound traditions of Chopin, Beethoven, and Rachmaninoff.",
               },
               {
                 year: "Düsseldorf",
                 title: "Schumann Hochschule",
-                desc: "Relocated to Germany to complete her Master of Music / Diplom-Konzertpianistin under premier European piano pedagogues.",
+                desc: "Relocating to Germany, graduating with the coveted Master Diplom-Konzertpianistin under premier European piano pedagogues.",
               },
               {
                 year: "Global",
                 title: "Worldwide Stages",
-                desc: "From Manhattan’s Broadway to Berlin's Brandenburg Gate, commanding audiences of millions with simultaneous piano & vocal mastery.",
+                desc: "From Manhattan’s Broadway to Berlin's Brandenburg Gate, captivating millions with her radiant stage presence and four-octave voice.",
               },
             ].map((card, i) => (
               <div
                 key={i}
-                className="group relative rounded-xl border border-line bg-ink/70 p-8 transition hover:border-gold/40"
+                className="group relative rounded-2xl border border-gold/15 bg-ink/80 p-8 shadow-lg transition hover:border-gold/50 hover:shadow-[0_0_30px_rgba(212,175,55,0.12)]"
               >
-                <span className="font-mono text-xs text-gold">{card.year}</span>
+                <span className="font-mono text-xs font-bold text-gold">{card.year}</span>
                 <h3 className="mt-4 font-serif text-2xl font-light text-ivory group-hover:text-gold transition">
                   {card.title}
                 </h3>
-                <p className="mt-4 text-xs font-light leading-relaxed text-ivory/60">
+                <p className="mt-4 text-xs font-light leading-relaxed text-ivory/65">
                   {card.desc}
                 </p>
               </div>
@@ -388,35 +420,59 @@ export default function Home() {
       </section>
 
       {/* Act IV · The Metamorphosis (Vier Oktaven & Live Wave) */}
-      <section id="voice" className="border-t border-line py-32 px-6 md:px-12">
+      <section id="voice" className="border-t border-gold/15 py-32 px-6 md:px-12">
         <div className="mx-auto max-w-7xl">
-          <div className="max-w-3xl">
-            <span className="font-mono text-xs uppercase tracking-[0.35em] text-gold">
-              03 / The Metamorphosis
-            </span>
-            <h2 className="mt-6 font-serif text-4xl font-light leading-tight md:text-7xl">
-              When the concert grand<br />
-              <em className="font-normal italic text-gold">begins to sing.</em>
-            </h2>
-            <p className="mt-8 text-base font-light leading-relaxed text-ivory/70 md:text-lg">
-              Classical concert halls demand restraint. Stadium rock demands surrender. Elena Nuzman commands both simultaneously. With an extraordinary vocal register spanning **four full octaves**, she accompanies herself live on the Steinway, shattering the boundary between Franz Liszt and epic rock.
-            </p>
+          <div className="grid gap-16 md:grid-cols-12 md:items-center">
+            <div className="md:col-span-6">
+              <span className="font-mono text-xs uppercase tracking-[0.35em] text-gold">
+                03 / The Metamorphosis
+              </span>
+              <h2 className="mt-6 font-serif text-4xl font-light leading-tight md:text-7xl">
+                When the concert grand<br />
+                <em className="font-normal italic text-gold">begins to sing.</em>
+              </h2>
+              <p className="mt-8 text-base font-light leading-relaxed text-ivory/80 md:text-lg">
+                Classical halls demand restraint. Stadium rock demands total surrender. Elena Nuzman commands both simultaneously. With an extraordinary vocal register spanning **four full octaves**, she accompanies herself live on the Steinway, dissolving the wall between Liszt and stadium rock.
+              </p>
 
-            {/* Live Gold Acoustic Visualizer */}
-            <div className="mt-12 rounded-2xl border border-gold/30 bg-ebony/60 p-6 backdrop-blur">
-              <div className="flex items-center justify-between border-b border-line pb-4 text-xs uppercase tracking-widest text-gold/80">
-                <span className="flex items-center gap-2">
-                  <span className="h-2 w-2 rounded-full bg-gold animate-ping" />
-                  Live Acoustic Resonance & Vocal Wave
+              {/* Live Gold Acoustic Visualizer */}
+              <div className="mt-10 rounded-2xl border border-gold/30 bg-ebony/70 p-6 backdrop-blur shadow-[0_0_40px_rgba(212,175,55,0.1)]">
+                <div className="flex items-center justify-between border-b border-gold/15 pb-4 text-xs uppercase tracking-widest text-gold">
+                  <span className="flex items-center gap-2">
+                    <span className="h-2 w-2 rounded-full bg-gold animate-ping" />
+                    Live 4-Octave Acoustic Resonance
+                  </span>
+                  <span className="font-mono text-ivory/50">E3 — E7 (4 Octaves)</span>
+                </div>
+                <div className="py-6">
+                  <VoiceWave
+                    fallback={soundOn || isPlayingPreview ? 0.95 : 0.35}
+                    height={85}
+                  />
+                </div>
+                <div className="flex justify-between border-t border-gold/15 pt-3 font-mono text-[10px] uppercase text-ivory/50">
+                  <span>Chest Resonance (Warm Alto)</span>
+                  <span>Operatic Whistle & Soprano</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Vocal Passion Visual Card */}
+            <div className="relative aspect-[4/5] overflow-hidden rounded-3xl border border-gold/40 bg-ebony shadow-[0_15px_50px_rgba(212,175,55,0.2)] md:col-span-6">
+              <Image
+                src="/images/vocal-passion.jpg"
+                alt="Elena Nuzman singing passionately at the concert grand"
+                fill
+                className="object-cover object-center transition duration-700 hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-ink/90 via-transparent to-transparent" />
+              <div className="absolute bottom-6 left-6 right-6">
+                <span className="font-mono text-xs uppercase tracking-widest text-gold">
+                  SIMULTANEOUS PIANO & VOCAL MASTERY
                 </span>
-                <span className="font-mono text-ivory/40">E3 — E7 (4 Octaves)</span>
-              </div>
-              <div className="py-6">
-                <VoiceWave fallback={soundOn || isPlayingPreview ? 0.9 : 0.3} height={85} />
-              </div>
-              <div className="flex justify-between border-t border-line pt-3 font-mono text-[10px] uppercase text-ivory/40">
-                <span>Bass Register: Chest Resonance</span>
-                <span>Head Register: Whistle / Operatic Soprano</span>
+                <p className="mt-2 font-serif text-2xl font-light text-ivory">
+                  Accompanying herself live at full vocal power
+                </p>
               </div>
             </div>
           </div>
@@ -426,12 +482,12 @@ export default function Home() {
               {
                 badge: "IMPALA SILVER",
                 title: "Liebesträume",
-                desc: "Awarded the international Impala Silver Award for millions of global streams. Her vocal adaptation of Franz Liszt's Liebestraum No. 3.",
+                desc: "Awarded the prestigious Impala Silver Award for millions of global streams. Her vocal adaptation of Franz Liszt's Liebestraum No. 3.",
               },
               {
                 badge: "BROADWAY",
                 title: "Manhattan Stages",
-                desc: "Celebrated live soloist performances across premier musical showcases in New York City.",
+                desc: "Celebrated live soloist performances across premier musical showcases and theater stages in New York City.",
               },
               {
                 badge: "MILLIONS LIVE",
@@ -441,15 +497,15 @@ export default function Home() {
             ].map((card, i) => (
               <div
                 key={i}
-                className="group relative rounded-xl border border-line bg-ink/80 p-8 transition hover:border-gold/40"
+                className="group relative rounded-2xl border border-gold/15 bg-ink/80 p-8 shadow-lg transition hover:border-gold/40"
               >
-                <span className="font-mono text-xs uppercase tracking-widest text-gold/70">
+                <span className="font-mono text-xs uppercase tracking-widest text-gold">
                   {card.badge}
                 </span>
                 <h3 className="mt-4 font-serif text-2xl font-light text-ivory">
                   {card.title}
                 </h3>
-                <p className="mt-4 text-xs font-light leading-relaxed text-ivory/60">
+                <p className="mt-4 text-xs font-light leading-relaxed text-ivory/65">
                   {card.desc}
                 </p>
               </div>
@@ -458,8 +514,47 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Act V · The Archive (Diskographie & Track Player) */}
-      <section id="repertoire" className="border-t border-line bg-ebony/40 py-32 px-6 md:px-12">
+      {/* Act V · The Triumphant Stage (Live Concert Energy) */}
+      <section className="relative border-t border-gold/15 py-24 px-6 md:px-12 overflow-hidden">
+        <div className="mx-auto max-w-7xl">
+          <div className="relative overflow-hidden rounded-3xl border border-gold/30 bg-ebony shadow-[0_25px_90px_rgba(0,0,0,0.85)]">
+            <div className="relative aspect-[16/9] w-full md:aspect-[21/9]">
+              <Image
+                src="/images/stage-triumph.jpg"
+                alt="Elena Nuzman triumphant ovation at concert hall"
+                fill
+                className="object-cover object-center transition duration-700 hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/40 to-transparent" />
+            </div>
+
+            <div className="absolute bottom-8 left-8 right-8 flex flex-col justify-between gap-6 md:flex-row md:items-end">
+              <div>
+                <span className="font-mono text-xs uppercase tracking-[0.25em] text-gold">
+                  THE TRIUMPH OF LIVE PERFORMANCE
+                </span>
+                <h2 className="mt-2 font-serif text-3xl font-light text-ivory md:text-5xl">
+                  An Electric Celebration of Music.
+                </h2>
+                <p className="mt-3 max-w-xl text-sm font-light text-ivory/70">
+                  Whether in a sacred classical auditorium or before a stadium crowd of tens of thousands, Elena Nuzman commands the stage with infectious charisma, sovereign technique, and genuine joy.
+                </p>
+              </div>
+
+              <a
+                href="#booking"
+                className="inline-flex items-center gap-2 rounded-full bg-gold px-8 py-3 font-mono text-xs uppercase tracking-widest text-ink font-semibold shadow-[0_0_25px_rgba(212,175,55,0.3)] transition hover:bg-ivory"
+              >
+                Inquire For Your Stage
+                <ArrowRight className="h-4 w-4" />
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Act VI · The Archive (Diskographie & Track Player) */}
+      <section id="repertoire" className="border-t border-gold/15 bg-ebony/40 py-32 px-6 md:px-12">
         <div className="mx-auto max-w-7xl">
           <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
             <div>
@@ -470,7 +565,7 @@ export default function Home() {
                 The Discography.
               </h2>
             </div>
-            <p className="font-mono text-xs uppercase tracking-widest text-ivory/40">
+            <p className="font-mono text-xs uppercase tracking-widest text-gold/80">
               Click Any Track for Harmonic Resonance
             </p>
           </div>
@@ -482,15 +577,17 @@ export default function Home() {
                 <div
                   key={track.id}
                   onClick={() => handleTrackSelect(track)}
-                  className={`group flex cursor-pointer flex-col justify-between rounded-xl border p-6 transition md:flex-row md:items-center ${
+                  className={`group flex cursor-pointer flex-col justify-between rounded-2xl border p-6 transition md:flex-row md:items-center ${
                     isSelected
-                      ? "border-gold bg-ink/90 shadow-[0_0_30px_rgba(212,175,55,0.12)]"
-                      : "border-line bg-ebony/30 hover:border-gold/40"
+                      ? "border-gold bg-ink/95 shadow-[0_0_35px_rgba(212,175,55,0.18)]"
+                      : "border-gold/15 bg-ebony/40 hover:border-gold/40 hover:bg-ebony/70"
                   }`}
                 >
                   <div className="max-w-2xl">
                     <div className="flex items-center gap-4">
-                      <span className="font-mono text-xs text-gold">0{idx + 1}</span>
+                      <span className="font-mono text-xs font-bold text-gold">
+                        0{idx + 1}
+                      </span>
                       <h3
                         className={`font-serif text-2xl font-light transition ${
                           isSelected ? "text-gold" : "text-ivory group-hover:text-gold"
@@ -498,30 +595,40 @@ export default function Home() {
                       >
                         {track.title}
                       </h3>
-                      <span className="hidden font-mono text-[11px] text-ivory/40 sm:inline-block">
+                      <span className="hidden font-mono text-[11px] text-ivory/50 sm:inline-block">
                         ({track.year})
                       </span>
+                      <span className="font-mono text-[10px] text-gold/80 italic">
+                        · {track.mood}
+                      </span>
                     </div>
-                    <p className="mt-2 text-xs text-ivory/70">{track.subtitle}</p>
-                    <p className="mt-3 text-xs font-light text-ivory/50">{track.description}</p>
-                    <span className="mt-3 inline-block rounded-full border border-gold/30 bg-gold/5 px-3 py-1 font-mono text-[10px] uppercase tracking-wider text-gold">
+                    <p className="mt-2 text-xs text-ivory/80">{track.subtitle}</p>
+                    <p className="mt-3 text-xs font-light text-ivory/60 leading-relaxed">
+                      {track.description}
+                    </p>
+                    <span className="mt-3 inline-block rounded-full border border-gold/40 bg-gold/10 px-3 py-1 font-mono text-[10px] uppercase tracking-wider text-gold">
                       {track.accolade}
                     </span>
                   </div>
 
                   <div className="mt-6 flex items-center justify-between gap-6 md:mt-0">
-                    <div className="text-right font-mono text-xs text-ivory/40">
+                    <div className="text-right font-mono text-xs text-ivory/50">
                       <span>{track.genre}</span>
+                      <span className="block text-[10px] text-ivory/40">{track.duration}</span>
                     </div>
                     <button
                       type="button"
-                      className={`flex h-10 w-10 items-center justify-center rounded-full border transition ${
+                      className={`flex h-12 w-12 items-center justify-center rounded-full border transition ${
                         isSelected
-                          ? "border-gold bg-gold text-ink"
-                          : "border-ivory/20 text-ivory group-hover:border-gold group-hover:text-gold"
+                          ? "border-gold bg-gold text-ink shadow-[0_0_20px_rgba(212,175,55,0.4)]"
+                          : "border-gold/30 text-gold group-hover:border-gold group-hover:bg-gold/10"
                       }`}
                     >
-                      {isSelected ? "▶" : "♪"}
+                      {isSelected ? (
+                        <Play className="h-5 w-5 fill-current" />
+                      ) : (
+                        <Music className="h-4 w-4" />
+                      )}
                     </button>
                   </div>
                 </div>
@@ -531,8 +638,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Act VI · The Audience (Private Inquiry & Booking) */}
-      <section id="booking" className="border-t border-line py-32 px-6 md:px-12">
+      {/* Act VII · The Audience (Private Inquiry & Booking) */}
+      <section id="booking" className="border-t border-gold/15 py-32 px-6 md:px-12">
         <div className="mx-auto max-w-4xl">
           <div className="text-center">
             <span className="font-mono text-xs uppercase tracking-[0.38em] text-gold">
@@ -541,108 +648,121 @@ export default function Home() {
             <h2 className="mt-6 font-serif text-4xl font-light md:text-7xl">
               Engage the Grand.
             </h2>
-            <p className="mx-auto mt-6 max-w-xl font-sans text-sm font-light leading-relaxed text-ivory/60 md:text-base">
-              Discreet booking engagements for philharmonic halls, international festivals, luxury galas, and private residence concerts.
+            <p className="mx-auto mt-6 max-w-xl font-sans text-sm font-light leading-relaxed text-ivory/70 md:text-base">
+              Discreet booking engagements for philharmonic halls, international festivals, luxury galas, and private residence concerts worldwide.
             </p>
           </div>
 
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              alert(
-                `Thank you for your inquiry. Elena Nuzman's management will review your request for: ${bookingTier}.`
-              );
+              setFormSubmitted(true);
             }}
-            className="mt-16 rounded-2xl border border-line bg-ebony/40 p-8 md:p-12"
+            className="mt-16 rounded-3xl border border-gold/25 bg-ebony/50 p-8 shadow-2xl backdrop-blur-md md:p-12"
           >
-            <div className="grid gap-6 md:grid-cols-2">
-              <div>
-                <label className="block font-mono text-[11px] uppercase tracking-widest text-ivory/50">
-                  Your Name / Institution
-                </label>
-                <input
-                  type="text"
-                  required
-                  placeholder="e.g. Tonhalle Düsseldorf / Private Client"
-                  className="mt-2 w-full rounded-lg border border-line bg-ink px-4 py-3 text-sm text-ivory placeholder-ivory/30 focus:border-gold focus:outline-none"
-                />
+            {formSubmitted ? (
+              <div className="py-12 text-center">
+                <CheckCircle2 className="mx-auto h-12 w-12 text-gold animate-bounce" />
+                <h3 className="mt-4 font-serif text-3xl font-light text-ivory">
+                  Inquiry Received With Discretion.
+                </h3>
+                <p className="mx-auto mt-3 max-w-md text-sm text-ivory/60">
+                  Thank you. Management will review your performance request for{" "}
+                  <span className="text-gold font-medium">{bookingTier}</span> and connect with your team shortly.
+                </p>
               </div>
+            ) : (
+              <>
+                <div className="grid gap-6 md:grid-cols-2">
+                  <div>
+                    <label className="block font-mono text-[11px] uppercase tracking-widest text-ivory/60">
+                      Your Name / Institution
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. Tonhalle Düsseldorf / Private Client"
+                      className="mt-2 w-full rounded-xl border border-gold/20 bg-ink px-4 py-3.5 text-sm text-ivory placeholder-ivory/30 focus:border-gold focus:outline-none"
+                    />
+                  </div>
 
-              <div>
-                <label className="block font-mono text-[11px] uppercase tracking-widest text-ivory/50">
-                  Email Address
-                </label>
-                <input
-                  type="email"
-                  required
-                  placeholder="management@client.com"
-                  className="mt-2 w-full rounded-lg border border-line bg-ink px-4 py-3 text-sm text-ivory placeholder-ivory/30 focus:border-gold focus:outline-none"
-                />
-              </div>
-            </div>
+                  <div>
+                    <label className="block font-mono text-[11px] uppercase tracking-widest text-ivory/60">
+                      Email Address
+                    </label>
+                    <input
+                      type="email"
+                      required
+                      placeholder="management@client.com"
+                      className="mt-2 w-full rounded-xl border border-gold/20 bg-ink px-4 py-3.5 text-sm text-ivory placeholder-ivory/30 focus:border-gold focus:outline-none"
+                    />
+                  </div>
+                </div>
 
-            <div className="mt-6">
-              <label className="block font-mono text-[11px] uppercase tracking-widest text-ivory/50">
-                Performance Context
-              </label>
-              <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
-                {[
-                  "Philharmonic Hall",
-                  "Gala & Festival",
-                  "Private Soirée",
-                  "Crossover Recital",
-                ].map((tier) => (
+                <div className="mt-6">
+                  <label className="block font-mono text-[11px] uppercase tracking-widest text-ivory/60">
+                    Performance Context
+                  </label>
+                  <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
+                    {[
+                      "Philharmonic Hall",
+                      "Gala & Festival",
+                      "Private Soirée",
+                      "Crossover Recital",
+                    ].map((tier) => (
+                      <button
+                        type="button"
+                        key={tier}
+                        onClick={() => setBookingTier(tier)}
+                        className={`rounded-xl border px-3 py-3 font-mono text-[11px] uppercase tracking-wider transition ${
+                          bookingTier === tier
+                            ? "border-gold bg-gold/15 text-gold shadow-[0_0_15px_rgba(212,175,55,0.2)]"
+                            : "border-gold/15 bg-ink text-ivory/60 hover:border-gold/40"
+                        }`}
+                      >
+                        {tier}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="mt-6">
+                  <label className="block font-mono text-[11px] uppercase tracking-widest text-ivory/60">
+                    Confidential Inquiry Details
+                  </label>
+                  <textarea
+                    rows={4}
+                    placeholder="Preferred date, location, concert grand availability (Steinway D/B preferred), and audience scope."
+                    className="mt-2 w-full rounded-xl border border-gold/20 bg-ink px-4 py-3.5 text-sm text-ivory placeholder-ivory/30 focus:border-gold focus:outline-none"
+                  />
+                </div>
+
+                <div className="mt-8 flex justify-end">
                   <button
-                    type="button"
-                    key={tier}
-                    onClick={() => setBookingTier(tier)}
-                    className={`rounded-lg border px-3 py-3 font-mono text-[11px] uppercase tracking-wider transition ${
-                      bookingTier === tier
-                        ? "border-gold bg-gold/10 text-gold"
-                        : "border-line bg-ink text-ivory/60 hover:border-ivory/40"
-                    }`}
+                    type="submit"
+                    className="w-full rounded-full bg-gold px-8 py-3.5 font-mono text-xs uppercase tracking-[0.2em] text-ink font-semibold shadow-[0_0_20px_rgba(212,175,55,0.3)] transition hover:bg-ivory sm:w-auto"
                   >
-                    {tier}
+                    Transmit Inquiry
                   </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="mt-6">
-              <label className="block font-mono text-[11px] uppercase tracking-widest text-ivory/50">
-                Confidential Inquiry Details
-              </label>
-              <textarea
-                rows={4}
-                placeholder="Preferred date, location, concert grand availability (Steinway D/B preferred), and audience scope."
-                className="mt-2 w-full rounded-lg border border-line bg-ink px-4 py-3 text-sm text-ivory placeholder-ivory/30 focus:border-gold focus:outline-none"
-              />
-            </div>
-
-            <div className="mt-8 flex justify-end">
-              <button
-                type="submit"
-                className="w-full rounded-full bg-gold px-8 py-3 font-mono text-xs uppercase tracking-[0.2em] text-ink font-medium transition hover:bg-ivory sm:w-auto"
-              >
-                Transmit Inquiry
-              </button>
-            </div>
+                </div>
+              </>
+            )}
           </form>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-line bg-ink py-16 px-6 text-center text-xs text-ivory/40 md:px-12">
+      <footer className="border-t border-gold/15 bg-ink py-16 px-6 text-center text-xs text-ivory/50 md:px-12">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-6 md:flex-row">
           <p className="font-serif text-lg tracking-wider text-ivory">
             ELENA <span className="text-gold italic">NUZMAN</span>
           </p>
-          <p className="font-mono text-[11px] tracking-widest">
+          <p className="font-mono text-[11px] tracking-widest text-ivory/60">
             MASTER GRADUATE ROBERT SCHUMANN HOCHSCHULE · ALL RIGHTS RESERVED
           </p>
-          <div className="flex gap-6 font-mono text-[11px] uppercase tracking-widest text-ivory/60">
+          <div className="flex gap-6 font-mono text-[11px] uppercase tracking-widest text-ivory/70">
             <a href="#top" className="hover:text-gold transition">
-              Back to Top
+              Back to Top ↑
             </a>
           </div>
         </div>
