@@ -86,7 +86,7 @@ export default function EmotionHero({
   return (
     <section
       id="top"
-      className="eh relative h-[100svh] w-full overflow-hidden bg-[#050506] text-[#f2efea]"
+      className="eh relative h-[100svh] w-full overflow-hidden bg-[#140f0b] text-[#f6f0e6]"
     >
       {/* Layered Real-Identity Cinema Stills + Lazy-Loaded Short Videos */}
       {HERO_SLIDES.map((slide, i) => (
@@ -123,14 +123,14 @@ export default function EmotionHero({
         </div>
       ))}
 
-      {/* Cinematic Chiaroscuro Overlays — keeping upper-center face bright and clear */}
+      {/* Cinematic Chiaroscuro Overlays — warm espresso-amber instead of pure black */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-[#050506]/95"
+        className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#140f0b]/55 via-transparent to-[#140f0b]/92"
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#050506]/90 via-[#050506]/25 to-transparent"
+        className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#140f0b]/85 via-[#140f0b]/20 to-transparent"
       />
 
       {/* Content Container */}

@@ -1,63 +1,113 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import Lenis from "lenis";
-import EmotionHero from "@/components/EmotionHero";
-import Kinetic from "@/components/Kinetic";
-import ScrollStage from "@/components/ScrollStage";
-import StageDoors from "@/components/StageDoors";
-import VoiceLab from "@/components/VoiceLab";
-import PressArchive from "@/components/PressArchive";
-import { DISCOGRAPHY, type Lang, type Track } from "@/lib/copy";
 
-const MARQUEE_ITEMS = {
-  en: [
-    "MASTER DIPLOMA · ROBERT SCHUMANN CONSERVATORY DÜSSELDORF",
-    "IMPALA SILVER AWARD · OVER 5 MILLION STREAMS (LIEBESTRÄUME)",
-    "FOUR-OCTAVE VOCAL RANGE (E3 — E7) & SOLO CONCERT GRAND",
-    "HEADLINER · BERLIN BRANDENBURG GATE NYE (2 MILLION LIVE)",
-    "RTL ALBUM OF THE YEAR · TOP 10 GERMAN NEWCOMER CHARTS",
-    "PERSONALLY AUTHORIZED BY BENNY ANDERSSON & BJÖRN ULVAEUS (ABBA)",
-    "2025 STUDIO ALBUM · MY PIANO AND I",
-  ],
-  de: [
-    "DIPLOM-KONZERTPIANISTIN · ROBERT SCHUMANN HOCHSCHULE DÜSSELDORF",
-    "IMPALA SILVER AWARD · ÜBER 5 MILLIONEN STREAMS (LIEBESTRÄUME)",
-    "VIER OKTAVEN STIMMUMFANG (E3 — E7) & SOLO-KONZERTFLÜGEL",
-    "HEADLINER · BRANDENBURGER TOR BERLIN SILVESTER (2 MIO. LIVE)",
-    "RTL ALBUM DES JAHRES · TOP 10 DEUTSCHE NEWCOMER-CHARTS",
-    "PERSÖNLICH AUTORISIERT VON BENNY ANDERSSON & BJÖRN ULVAEUS (ABBA)",
-    "NEUES STUDIOALBUM 2025 · MY PIANO AND I",
-  ],
-};
+/* ---------- Data: The Works & Program ---------- */
+interface ProgramMovement {
+  number: string;
+  title: string;
+  opus: string;
+  movement: string;
+  year: string;
+  accolade: string;
+  duration: string;
+  freq: number;
+  cover: string;
+  character: string;
+  notes: string;
+}
+
+const MOVEMENTS: ProgramMovement[] = [
+  {
+    number: "I",
+    title: "Liebesträume",
+    opus: "Op. 62 / No. 3",
+    movement: "Andante espressivo con voce",
+    year: "2016 / 2021",
+    accolade: "IMPALA Silver Award · Over 5M Streams",
+    duration: "4:12",
+    freq: 207.65, // Ab3
+    cover: "/images/real/album-liebestraum.jpg",
+    character: "Romantic Transmutation",
+    notes:
+      "A monumental crossover milestone. Elena transmutes Franz Liszt’s legendary piano nocturne into an operatic vocal tour-de-force, accompanying herself live at the Steinway.",
+  },
+  {
+    number: "II",
+    title: "My Piano And I",
+    opus: "Studio Master 2025",
+    movement: "Largo intimo e rubato",
+    year: "2025 Release",
+    accolade: "Featured Masterpiece 2025",
+    duration: "3:48",
+    freq: 174.61, // F3
+    cover: "/images/real/album-my-piano-and-i.jpg",
+    character: "Pure Acoustic Intimacy",
+    notes:
+      "Recorded in pure acoustic authenticity. Just the concert grand, Elena’s voice, and zero digital pitch correction. Every mechanical hammer release and harmonic pedal decay speaks.",
+  },
+  {
+    number: "III",
+    title: "Here I Go Again",
+    opus: "Symphonic Arena Edition",
+    movement: "Allegro feroce con fuoco",
+    year: "Live Brandenburg Gate",
+    accolade: "Broadcast Live to Millions on National TV",
+    duration: "4:35",
+    freq: 293.66, // D4
+    cover: "/images/real/elena-brandenburger-tor.jpg",
+    character: "Stadium Crossover",
+    notes:
+      "Her celebrated Whitesnake interpretation performed live at Berlin’s Brandenburg Gate on New Year's Eve, marrying classical piano rigor with the sheer explosive electricity of arena rock.",
+  },
+  {
+    number: "IV",
+    title: "I Believe In You",
+    opus: "Debut Opus 2009",
+    movement: "Moderato maestoso",
+    year: "Debut Release",
+    accolade: "RTL Album of the Year · Top 10 Charts",
+    duration: "3:56",
+    freq: 261.63, // C4
+    cover: "/images/real/elena-press-portrait.jpg",
+    character: "The Breakthrough",
+    notes:
+      "Voted Album of the Year by RTL and rocketing directly into the Top 10 German newcomer charts, marking the arrival of a rare dual-talent virtuosic phenomenon.",
+  },
+  {
+    number: "V",
+    title: "Nur die Sieger steh'n im Licht",
+    opus: "The Winner Takes It All",
+    movement: "Grave drammatico",
+    year: "Official Clearance",
+    accolade: "Personally Authorized by Benny Andersson & Björn Ulvaeus (ABBA)",
+    duration: "4:24",
+    freq: 220.0, // A3
+    cover: "/images/real/elena-stage-live.jpg",
+    character: "Official Masterwork Clearance",
+    notes:
+      "An exceptionally rare honor: the legendary ABBA founders granted Elena their direct, personal clearance for her German translation and impassioned grand piano arrangement.",
+  },
+];
 
 export default function Home() {
-  const [lang, setLang] = useState<Lang>("de");
-  const [soundOn, setSoundOn] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  const [activeTrack, setActiveTrack] = useState<Track>(DISCOGRAPHY[0]);
-  const [isPlayingPreview, setIsPlayingPreview] = useState(false);
-  const [trackVideoId, setTrackVideoId] = useState<string | null>(null);
-
-  // Booking form state
-  const [bookingTier, setBookingTier] = useState("Philharmonic Hall");
-  const [clientName, setClientName] = useState("");
-  const [clientEmail, setClientEmail] = useState("");
-  const [clientDetails, setClientDetails] = useState("");
-  const [honeypot, setHoneypot] = useState("");
-  const [submitting, setSubmitting] = useState(false);
-  const [referenceId, setReferenceId] = useState<string | null>(null);
-
+  const [activeMovement, setActiveMovement] = useState<ProgramMovement>(MOVEMENTS[0]);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [faderPosition, setFaderPosition] = useState(35); // 0 = Pure Liszt, 100 = Pure Stadium Rock
+  const [selectedOctave, setSelectedOctave] = useState<number | null>(null);
+  const [activePhoto, setActivePhoto] = useState(0);
+  const [inquiryType, setInquiryType] = useState("Philharmonic Hall Recital");
+  const [transmitted, setTransmitted] = useState(false);
   const audioCtxRef = useRef<AudioContext | null>(null);
 
-  // Smooth Scroll via Lenis
+  // Smooth Lenis Scroll
   useEffect(() => {
-    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const lenis = new Lenis({
-      lerp: 0.085,
+      lerp: 0.07,
       smoothWheel: true,
-      wheelMultiplier: 1.05,
+      wheelMultiplier: 1.0,
     });
     let raf = 0;
     const loop = (time: number) => {
@@ -71,16 +121,8 @@ export default function Home() {
     };
   }, []);
 
-  // Navbar scroll detection
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  // Rich Web Audio Steinway Grand Piano & Harmonic Overtone Synthesizer
-  const playChord = (baseFreq = 207.65) => {
+  // Web Audio Synthetic Piano Resonator with Crossover Fader
+  const playHarmonics = (baseFreq = 207.65, distortion = 0) => {
     try {
       const AudioCtx =
         window.AudioContext ||
@@ -90,621 +132,562 @@ export default function Home() {
       audioCtxRef.current = ctx;
       if (ctx.state === "suspended") ctx.resume();
 
-      // Warm romantic arpeggiated grand chord (Root, Major 3rd, Perfect 5th, Octave, Major 10th)
-      const ratios = [0.5, 1, 1.25, 1.5, 2, 2.5];
+      const ratios = [1, 1.25, 1.5, 2, 2.5, 3];
+      const isRock = distortion > 50;
+
       ratios.forEach((ratio, idx) => {
         const osc = ctx.createOscillator();
-        const subOsc = ctx.createOscillator();
-        const filter = ctx.createBiquadFilter();
         const gain = ctx.createGain();
 
-        const start = ctx.currentTime + idx * 0.045;
-        const freq = baseFreq * ratio;
+        // Waveform morphs from warm pure sine/triangle to rich sawtooth based on fader
+        osc.type = isRock ? (idx % 2 === 0 ? "sawtooth" : "square") : (idx === 0 ? "triangle" : "sine");
+        osc.frequency.setValueAtTime(baseFreq * ratio, ctx.currentTime + idx * 0.03);
 
-        osc.type = idx < 2 ? "triangle" : "sine";
-        subOsc.type = "sine";
-        osc.frequency.setValueAtTime(freq, start);
-        subOsc.frequency.setValueAtTime(freq * 1.002, start); // subtle Steinway string chorus detune
+        const peak = isRock ? 0.08 / (idx + 1) : 0.16 / (idx + 1);
+        gain.gain.setValueAtTime(0.001, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(peak, ctx.currentTime + 0.05 + idx * 0.03);
+        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 3.6);
 
-        filter.type = "lowpass";
-        filter.frequency.setValueAtTime(freq * 4.5, start);
-        filter.frequency.exponentialRampToValueAtTime(freq * 1.4, start + 3.2);
-
-        gain.gain.setValueAtTime(0.0001, start);
-        gain.gain.exponentialRampToValueAtTime(0.11 / (idx * 0.65 + 1), start + 0.04);
-        gain.gain.exponentialRampToValueAtTime(0.0001, start + 4.2);
-
-        osc.connect(filter);
-        subOsc.connect(filter);
-        filter.connect(gain);
+        osc.connect(gain);
         gain.connect(ctx.destination);
-
-        osc.start(start);
-        subOsc.start(start);
-        osc.stop(start + 4.4);
-        subOsc.stop(start + 4.4);
+        osc.start(ctx.currentTime + idx * 0.03);
+        osc.stop(ctx.currentTime + 3.8);
       });
-      setSoundOn(true);
+      setIsPlaying(true);
+      setTimeout(() => setIsPlaying(false), 3800);
     } catch {
-      setSoundOn(true);
+      setIsPlaying(false);
     }
   };
 
-  const handleTrackSelect = (track: Track) => {
-    setActiveTrack(track);
-    setIsPlayingPreview(true);
-    playChord(track.fundamentalFreq);
-    window.setTimeout(() => setIsPlayingPreview(false), 3800);
-  };
+  const REAL_PHOTOS = [
+    {
+      src: "/images/real/elena-grand-1.jpg",
+      caption: "Elena Nuzman seated at the Steinway Concert Grand",
+      sub: "Concert Hall Series · Steinway D-274",
+    },
+    {
+      src: "/images/real/elena-grand-2.jpg",
+      caption: "Virtuoso touch and simultaneous vocal projection",
+      sub: "Robert Schumann Hochschule Master Discipline",
+    },
+    {
+      src: "/images/real/elena-brandenburger-tor.jpg",
+      caption: "Headlining the Brandenburg Gate NYE broadcast",
+      sub: "Broadcast Live to Millions of Television Viewers",
+    },
+    {
+      src: "/images/real/elena-impala-award.jpg",
+      caption: "Elena Nuzman with the IMPALA Silver Award",
+      sub: "For over 5 Million Global Streams of Liebesträume",
+    },
+  ];
 
-  const handleInquirySubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setSubmitting(true);
-    try {
-      const res = await fetch("/api/inquiry", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: clientName,
-          email: clientEmail,
-          tier: bookingTier,
-          details: clientDetails,
-          website: honeypot,
-        }),
-      });
-      const data = await res.json();
-      setReferenceId(data.referenceId || "EN-VIP2026");
-    } catch {
-      setReferenceId("EN-VIP2026");
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  const navItems =
-    lang === "de"
-      ? [
-          ["Story", "#story"],
-          ["Weltbühnen", "#stages"],
-          ["Vier Oktaven", "#voice"],
-          ["Diskographie", "#repertoire"],
-          ["Weltpresse", "#press"],
-          ["Kontakt", "#booking"],
-        ]
-      : [
-          ["Story", "#story"],
-          ["World Stages", "#stages"],
-          ["Four Octaves", "#voice"],
-          ["Repertoire", "#repertoire"],
-          ["Press", "#press"],
-          ["Inquire", "#booking"],
-        ];
+  const OCTAVES = [
+    {
+      octave: "1st Octave",
+      range: "E3 — B3",
+      register: "Contralto / Chest Resonance",
+      vibe: "Warm, dark, velvety chest timber. The foundation where acoustic piano bass notes and chest voice intertwine.",
+      hz: "164 Hz — 246 Hz",
+    },
+    {
+      octave: "2nd Octave",
+      range: "C4 — B4",
+      register: "Mezzo-Soprano / Speech Level",
+      vibe: "Lyrical storytelling register. Clear Lisztian text articulation and melodic purity.",
+      hz: "261 Hz — 493 Hz",
+    },
+    {
+      octave: "3rd Octave",
+      range: "C5 — B5",
+      register: "Full Dramatic Soprano",
+      vibe: "The crossover explosion. Power belting and stadium rock dynamics cutting over full orchestral fortissimos.",
+      hz: "523 Hz — 987 Hz",
+    },
+    {
+      octave: "4th Octave",
+      range: "C6 — E7",
+      register: "Flageolet & Whistle Register",
+      vibe: "Operatic stratosphere. Piercing, crystalline high frequencies reaching beyond the traditional concert soprano limit.",
+      hz: "1046 Hz — 2637 Hz",
+    },
+  ];
 
   return (
-    <div className="min-h-screen bg-[#050506] text-[#f2efea] selection:bg-[#d4af37]/30 selection:text-[#f2efea]">
-      {/* Fixed Floating Glass Pill Navigation */}
-      <header
-        className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${
-          scrolled
-            ? "bg-gradient-to-b from-[#050506]/90 via-[#050506]/60 to-transparent py-3.5"
-            : "py-5 md:py-6"
-        }`}
-      >
-        <div className="mx-auto flex max-w-[1440px] items-center justify-between px-5 sm:px-10 lg:px-16">
-          <a
-            href="#top"
-            className="flex items-center gap-3"
-            aria-label="Elena Nuzman"
-          >
-            <span className="font-sans text-sm font-light uppercase tracking-[0.26em] text-[#f2efea]">
-              Elena{" "}
-              <span className="font-serif italic font-normal text-[#d4af37]">
-                Nuzman
-              </span>
+    <div className="min-h-screen bg-[#070606] text-[#f4efe8] selection:bg-[#c5a059] selection:text-[#070606]">
+      {/* ---------- Architectural Top Header (Philharmonic Arch) ---------- */}
+      <header className="fixed inset-x-0 top-0 z-50 border-b border-[#c5a059]/20 bg-[#070606]/90 px-6 py-4 backdrop-blur-md md:px-14">
+        <div className="mx-auto flex max-w-[1600px] items-center justify-between">
+          <a href="#top" className="flex flex-col">
+            <span className="font-serif text-xl tracking-[0.25em] text-[#f4efe8]">
+              ELENA <span className="italic text-[#c5a059]">NUZMAN</span>
+            </span>
+            <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-[#c5a059]/70">
+              Konzertpianistin · 4-Oktaven Sängerin
             </span>
           </a>
 
-          {/* Desktop Center Glass Pill Nav */}
-          <nav className="ag-glass hidden items-center gap-1 rounded-full px-3 py-1.5 lg:flex">
-            {navItems.map(([label, href]) => (
-              <a
-                key={href}
-                href={href}
-                className="rounded-full px-3.5 py-1.5 font-mono text-[11px] uppercase tracking-[0.2em] text-[#f2efea]/70 transition-colors hover:bg-white/[0.07] hover:text-[#f2efea]"
-              >
-                {label}
-              </a>
-            ))}
+          {/* Minimalist Concert Navigation */}
+          <nav className="hidden items-center gap-10 font-mono text-[11px] uppercase tracking-[0.22em] text-[#f4efe8]/70 md:flex">
+            <a href="#overture" className="hover:text-[#c5a059] transition">
+              01 / Ouvertüre
+            </a>
+            <a href="#dual-soul" className="hover:text-[#c5a059] transition">
+              02 / Dualität
+            </a>
+            <a href="#four-octaves" className="hover:text-[#c5a059] transition">
+              03 / Das 4-Oktaven-Spektrum
+            </a>
+            <a href="#program" className="hover:text-[#c5a059] transition">
+              04 / Programmheft
+            </a>
+            <a href="#patronage" className="hover:text-[#c5a059] transition">
+              05 / Audienz
+            </a>
           </nav>
 
-          {/* Right Controls: Language Switcher, Sound Toggle, Inquire & Mobile Menu */}
-          <div className="flex items-center gap-2.5 sm:gap-3">
-            {/* Bilingual Switcher */}
-            <div className="ag-glass flex items-center rounded-full p-0.5 font-mono text-[10px] uppercase tracking-[0.18em]">
-              {(["de", "en"] as const).map((l) => (
-                <button
-                  key={l}
-                  type="button"
-                  onClick={() => setLang(l)}
-                  className={`rounded-full px-2.5 py-1 transition ${
-                    lang === l
-                      ? "bg-[#d4af37] font-medium text-[#050506]"
-                      : "text-[#f2efea]/60 hover:text-[#f2efea]"
-                  }`}
-                >
-                  {l}
-                </button>
-              ))}
-            </div>
-
+          <div className="flex items-center gap-4">
             <button
               type="button"
-              onClick={() => playChord(activeTrack.fundamentalFreq)}
-              className="ag-btn !px-3.5 !py-2"
-              aria-label="Experience Sound"
+              onClick={() => playHarmonics(activeMovement.freq, faderPosition)}
+              className="inline-flex items-center gap-2.5 rounded-full border border-[#c5a059]/40 bg-[#14100c] px-4 py-2 font-mono text-[10px] uppercase tracking-[0.2em] text-[#c5a059] hover:bg-[#c5a059] hover:text-[#070606] transition"
             >
-              <span
-                className={`ag-dot ${
-                  soundOn || isPlayingPreview ? "animate-pulse" : "opacity-40"
-                }`}
-              />
-              <span className="hidden sm:inline">
-                {soundOn
-                  ? lang === "de"
-                    ? "Klang aktiv"
-                    : "Sound On"
-                  : lang === "de"
-                  ? "Klang"
-                  : "Sound"}
-              </span>
+              <span className={`h-1.5 w-1.5 rounded-full ${isPlaying ? "bg-[#c5a059] animate-ping" : "bg-[#c5a059]/50"}`} />
+              {isPlaying ? "Klang Resoniert..." : "Klang Erleben"}
             </button>
-
             <a
-              href="#booking"
-              className="ag-btn ag-btn-solid hidden !px-4 !py-2 sm:inline-flex"
+              href="#patronage"
+              className="hidden rounded-full bg-[#c5a059] px-5 py-2 font-mono text-[10px] font-semibold uppercase tracking-[0.2em] text-[#070606] hover:bg-[#f4efe8] transition sm:inline-block"
             >
-              {lang === "de" ? "Anfragen" : "Inquire"}
+              Engagement
             </a>
-
-            {/* Mobile Hamburger Toggle */}
-            <button
-              type="button"
-              aria-label="Menu"
-              onClick={() => setMenuOpen((v) => !v)}
-              className="ag-glass flex h-9 w-9 items-center justify-center rounded-full lg:hidden"
-            >
-              <div className="flex flex-col gap-1.5">
-                <span
-                  className={`block h-px w-4 bg-[#f2efea] transition-transform duration-300 ${
-                    menuOpen ? "translate-y-[3.5px] rotate-45" : ""
-                  }`}
-                />
-                <span
-                  className={`block h-px w-4 bg-[#d4af37] transition-transform duration-300 ${
-                    menuOpen ? "-translate-y-[3.5px] -rotate-45" : ""
-                  }`}
-                />
-              </div>
-            </button>
           </div>
         </div>
       </header>
 
-      {/* Mobile Full-Screen Luxury Overlay Menu */}
-      {menuOpen && (
-        <div className="fixed inset-0 z-40 flex flex-col justify-between bg-[#050506]/95 px-6 pb-12 pt-28 backdrop-blur-2xl lg:hidden">
-          <nav className="flex flex-col gap-5">
-            {navItems.map(([label, href], idx) => (
-              <a
-                key={href}
-                href={href}
-                onClick={() => setMenuOpen(false)}
-                className="flex items-baseline justify-between border-b border-white/10 pb-4 font-serif text-3xl font-light text-[#f2efea] transition hover:text-[#d4af37]"
-              >
-                <span>{label}</span>
-                <span className="font-mono text-xs text-[#d4af37]">0{idx + 1}</span>
-              </a>
-            ))}
-          </nav>
-          <div className="flex items-center justify-between border-t border-white/10 pt-6 font-mono text-xs uppercase tracking-[0.24em] text-[#f2efea]/50">
-            <span>Düsseldorf · Berlin · NYC</span>
-            <a
-              href="#booking"
-              onClick={() => setMenuOpen(false)}
-              className="ag-btn ag-btn-solid"
-            >
-              {lang === "de" ? "Konzert anfragen" : "Book Performance"}
-            </a>
-          </div>
-        </div>
-      )}
-
-      {/* PROLOG · EmotionHero (Multi-Layer Real-Identity Cinema + Short Videos) */}
-      <EmotionHero
-        lang={lang}
-        onPlayChord={playChord}
-        soundOn={soundOn || isPlayingPreview}
-      />
-
-      {/* INFINITE ACCOLADE MARQUEE */}
-      <div className="ag-marquee overflow-hidden border-y border-white/[0.08] bg-[#08080a] py-4">
-        <div className="ag-marquee-track flex w-max items-center gap-12 whitespace-nowrap font-mono text-[11px] uppercase tracking-[0.28em] text-[#f2efea]/65">
-          {[...MARQUEE_ITEMS[lang], ...MARQUEE_ITEMS[lang]].map((item, i) => (
-            <span key={i} className="inline-flex items-center gap-12">
-              <span>{item}</span>
-              <span className="h-1.5 w-1.5 rounded-full bg-[#d4af37]" />
-            </span>
-          ))}
-        </div>
-      </div>
-
-      {/* ACT I · Kinetic Manifest (3D Character-by-Character Reveal) */}
+      {/* ---------- ACT I · THE OVERTURE (Asymmetric Editorial Stage) ---------- */}
       <section
-        id="manifest"
-        className="relative px-5 py-28 md:px-12 md:py-36 lg:px-16"
+        id="overture"
+        className="relative flex min-h-[100svh] flex-col justify-end overflow-hidden px-6 pb-16 pt-32 md:px-14 md:pb-24"
       >
-        <div className="mx-auto max-w-6xl">
-          <span className="font-mono text-xs uppercase tracking-[0.3em] text-[#d4af37]">
-            {lang === "de"
-              ? "00 / Das Manifest · Konzertflügel & Vier Oktaven"
-              : "00 / The Manifest · Concert Grand & Four Octaves"}
-          </span>
+        {/* Architectural Stage Halo Background */}
+        <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_70%_20%,_rgba(197,160,89,0.12)_0%,_rgba(10,9,8,0.85)_55%,_#070606_90%)]" />
 
-          <h2 className="mt-8 font-serif text-3xl font-light leading-[1.15] text-[#f2efea] sm:text-5xl md:text-6xl">
-            <Kinetic
-              key={lang}
-              text={
-                lang === "de"
-                  ? "Ein Konzertflügel ist nicht bloss ein Instrument. Er ist die Verlängerung von Gedanken, Atem und vier Oktaven Stimme."
-                  : "A concert grand is not merely an instrument. It is an extension of bone, thought, breath, and four octaves of voice."
-              }
-              as="span"
-              step={18}
-            />
-          </h2>
-
-          <div className="mt-14 grid gap-10 border-t border-white/[0.08] pt-10 md:grid-cols-12 md:items-start">
-            <p className="font-sans text-sm font-light leading-relaxed text-[#f2efea]/70 md:col-span-7 sm:text-base">
-              {lang === "de"
-                ? "Über zwölftausend mechanische Teile, kalibriert auf reine akustische Resonanz. Unter Elena Nuzmans Händen verschmilzt die Meisterschaft der Robert Schumann Hochschule Düsseldorf mit einer vier Oktaven umfassenden Gesangsstimme, die Konzertsäle ebenso beherrscht wie das Brandenburger Tor vor zwei Millionen Menschen."
-                : "Over twelve thousand mechanical parts calibrated to sheer acoustic resonance. Under Elena Nuzman’s hands, the classical mastery of the Robert Schumann Conservatory in Düsseldorf merges seamlessly with a four-octave vocal range that commands philharmonic halls and two million spectators at Berlin's Brandenburg Gate alike."}
-            </p>
-            <div className="grid grid-cols-2 gap-6 border-l border-white/10 pl-6 font-mono text-xs uppercase tracking-widest md:col-span-5">
-              <div>
-                <span className="block text-2xl font-light font-serif text-[#d4af37]">
-                  4 Octaves
-                </span>
-                <span className="mt-1 block text-[10px] text-[#f2efea]/50">
-                  {lang === "de" ? "Stimmumfang E3 — E7" : "Vocal Register E3 — E7"}
+        <div className="mx-auto w-full max-w-[1600px]">
+          <div className="grid gap-12 lg:grid-cols-12 lg:items-end">
+            {/* Left Column: Monographic Editorial Typography */}
+            <div className="lg:col-span-7">
+              <div className="inline-flex items-center gap-3 border border-[#c5a059]/30 bg-[#120f0c] px-4 py-1.5">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#c5a059]" />
+                <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-[#c5a059]">
+                  Absolventin der Robert Schumann Hochschule Düsseldorf
                 </span>
               </div>
-              <div>
-                <span className="block text-2xl font-light font-serif text-[#d4af37]">
-                  5,000,000+
-                </span>
-                <span className="mt-1 block text-[10px] text-[#f2efea]/50">
-                  {lang === "de" ? "Streams · IMPALA Silver" : "Streams · IMPALA Silver"}
-                </span>
+
+              <h1 className="mt-8 font-serif text-[clamp(2.8rem,7vw,7.4rem)] font-light leading-[0.92] tracking-tight text-[#f4efe8]">
+                DAS CHIAROSCURO<br />
+                <span className="italic text-[#c5a059]">des Konzertflügels.</span><br />
+                VIER OKTAVEN GEWALT.
+              </h1>
+
+              <div className="mt-10 max-w-xl border-l-2 border-[#c5a059]/40 pl-6">
+                <p className="font-sans text-sm font-light leading-relaxed text-[#f4efe8]/75 md:text-base">
+                  Wenn die strenge Meisterschaft der klassischen Romantik auf die ungezähmte Wucht von vier Oktaven Stimmumfang trifft, entsteht keine bloße Musik – es entsteht eine Naturgewalt. Elena Nuzman begleitet sich selbst live am Steinway-Flügel.
+                </p>
+              </div>
+
+              <div className="mt-12 flex flex-wrap items-center gap-8 font-mono text-xs text-[#c5a059]">
+                <div>
+                  <span className="block text-2xl font-serif text-[#f4efe8]">88</span>
+                  <span className="text-[10px] uppercase tracking-widest text-[#f4efe8]/40">Tasten Mechanik</span>
+                </div>
+                <div className="h-8 w-px bg-[#c5a059]/20" />
+                <div>
+                  <span className="block text-2xl font-serif text-[#f4efe8]">4.0</span>
+                  <span className="text-[10px] uppercase tracking-widest text-[#f4efe8]/40">Oktaven Umfang</span>
+                </div>
+                <div className="h-8 w-px bg-[#c5a059]/20" />
+                <div>
+                  <span className="block text-2xl font-serif text-[#f4efe8]">5M+</span>
+                  <span className="text-[10px] uppercase tracking-widest text-[#f4efe8]/40">Streams · Impala Silver</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Column: Authentic Editorial Frame with Interactive Gallery */}
+            <div className="lg:col-span-5">
+              <div className="relative overflow-hidden rounded-2xl border border-[#c5a059]/30 bg-[#0e0c0a] p-3 shadow-2xl">
+                <div className="relative aspect-[3/4] w-full overflow-hidden rounded-xl">
+                  <Image
+                    src={REAL_PHOTOS[activePhoto].src}
+                    alt={REAL_PHOTOS[activePhoto].caption}
+                    fill
+                    priority
+                    className="object-cover object-center transition-all duration-700 ease-out hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#070606] via-transparent to-transparent opacity-80" />
+                </div>
+
+                <div className="p-4 pt-5">
+                  <div className="flex items-center justify-between">
+                    <span className="font-mono text-[10px] uppercase tracking-widest text-[#c5a059]">
+                      Dokument 0{activePhoto + 1} / 04
+                    </span>
+                    <span className="font-mono text-[10px] text-[#f4efe8]/40">
+                      {REAL_PHOTOS[activePhoto].sub}
+                    </span>
+                  </div>
+                  <p className="mt-2 font-serif text-lg italic text-[#f4efe8]">
+                    {REAL_PHOTOS[activePhoto].caption}
+                  </p>
+
+                  {/* Thumbnail Selector */}
+                  <div className="mt-4 flex gap-2 border-t border-[#c5a059]/15 pt-3">
+                    {REAL_PHOTOS.map((photo, i) => (
+                      <button
+                        key={i}
+                        type="button"
+                        onClick={() => setActivePhoto(i)}
+                        className={`relative h-12 w-12 overflow-hidden rounded-lg border transition ${
+                          activePhoto === i
+                            ? "border-[#c5a059] shadow-[0_0_12px_rgba(197,160,89,0.5)]"
+                            : "border-white/10 opacity-50 hover:opacity-100"
+                        }`}
+                      >
+                        <Image src={photo.src} alt="" fill className="object-cover" />
+                      </button>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ACT II · Pinned Scroll-Scrubbed Cinema Stage (-g 1 Video Scrubbing) */}
-      <ScrollStage lang={lang} />
-
-      {/* ACT III · Five Expanding Concert Stage Doors */}
-      <StageDoors lang={lang} onPlayChord={playChord} />
-
-      {/* ACT IV · Four Octaves Frequency Lab & Real Live Concert Video Cinema */}
-      <VoiceLab
-        lang={lang}
-        onPlayChord={playChord}
-        soundOn={soundOn || isPlayingPreview}
-      />
-
-      {/* ACT V · Selected Repertoire & Interactive Discography Vault */}
-      <section
-        id="repertoire"
-        className="border-t border-white/[0.08] bg-[#08080a] px-5 py-28 md:px-12 md:py-36 lg:px-16"
-      >
-        <div className="mx-auto max-w-[1440px]">
-          <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
-            <div>
-              <span className="font-mono text-xs uppercase tracking-[0.3em] text-[#d4af37]">
-                {lang === "de"
-                  ? "04 / Ausgewählte Werke & Alben"
-                  : "04 / Selected Works & Albums"}
-              </span>
-              <h2 className="mt-5 text-[clamp(2.2rem,5.5vw,5.6rem)] font-light uppercase leading-[0.95] tracking-[-0.04em] text-[#f2efea]">
-                {lang === "de" ? "DIE " : "THE "}
-                <em className="font-serif italic font-normal normal-case tracking-[-0.02em] text-[#d4af37]">
-                  {lang === "de" ? "Diskographie." : "Discography."}
-                </em>
-              </h2>
-            </div>
-            <p className="font-mono text-[11px] uppercase tracking-[0.26em] text-[#f2efea]/45">
-              {lang === "de"
-                ? "Klicken für Grundton-Resonanz oder Live-Video"
-                : "Click any record for harmonic resonance or live video"}
+      {/* ---------- ACT II · THE DUALITY (Liszt vs. Rock Slider) ---------- */}
+      <section id="dual-soul" className="relative border-t border-[#c5a059]/20 bg-[#0a0807] py-32 px-6 md:px-14">
+        <div className="mx-auto max-w-[1400px]">
+          <div className="text-center">
+            <span className="font-mono text-xs uppercase tracking-[0.3em] text-[#c5a059]">
+              02 / Das künstlerische Spannungsfeld
+            </span>
+            <h2 className="mt-4 font-serif text-3xl font-light sm:text-5xl md:text-6xl text-[#f4efe8]">
+              Zwei Seelen. <em className="italic text-[#c5a059]">Ein Instrument.</em>
+            </h2>
+            <p className="mx-auto mt-4 max-w-2xl font-sans text-sm font-light text-[#f4efe8]/70 md:text-base">
+              Verstellen Sie den interaktiven Regler: Erleben Sie, wie sich die Identität von Elena Nuzman von der puristischen Strenge der Robert Schumann Hochschule in die explosive Energie der Rock-Bühne am Brandenburger Tor verwandelt.
             </p>
           </div>
 
-          <div className="mt-16 grid gap-4">
-            {DISCOGRAPHY.map((track, idx) => {
-              const isSelected = activeTrack.id === track.id;
+          {/* Interactive Duality Fader */}
+          <div className="mt-16 rounded-3xl border border-[#c5a059]/30 bg-[#0f0c0a] p-8 md:p-12 shadow-2xl">
+            <div className="grid gap-8 md:grid-cols-2 md:items-center">
+              {/* Left Pole: Classical Rigor */}
+              <div
+                className={`transition-opacity duration-500 ${
+                  faderPosition <= 50 ? "opacity-100" : "opacity-40"
+                }`}
+              >
+                <span className="font-mono text-xs uppercase tracking-widest text-[#c5a059]">
+                  Pol I · Die Klassische Virtuosin
+                </span>
+                <h3 className="mt-2 font-serif text-3xl text-[#f4efe8]">
+                  Franz Liszt & Schumann Tradition
+                </h3>
+                <p className="mt-4 text-sm font-light leading-relaxed text-[#f4efe8]/70">
+                  Studium an der renommierten Robert Schumann Hochschule Düsseldorf. Abschluss als Diplom-Konzertpianistin. Höchste pianistische Fingerfertigkeit, millimetergenaue Anschlagskultur und die Fähigkeit, selbst die komplexesten Liszt-Transkriptionen mit federleichter Eleganz zu spielen.
+                </p>
+                <div className="mt-6 flex gap-4 font-mono text-[11px] text-[#c5a059]">
+                  <span className="border border-[#c5a059]/30 px-3 py-1">Master Diplom</span>
+                  <span className="border border-[#c5a059]/30 px-3 py-1">Steinway D-274</span>
+                </div>
+              </div>
+
+              {/* Right Pole: Stadium Rock Power */}
+              <div
+                className={`border-t border-[#c5a059]/20 pt-6 md:border-l md:border-t-0 md:pl-8 transition-opacity duration-500 ${
+                  faderPosition > 50 ? "opacity-100" : "opacity-40"
+                }`}
+              >
+                <span className="font-mono text-xs uppercase tracking-widest text-[#e8893a]">
+                  Pol II · Das Stadium-Crossover
+                </span>
+                <h3 className="mt-2 font-serif text-3xl text-[#f4efe8]">
+                  4 Oktaven Rock & Broadway
+                </h3>
+                <p className="mt-4 text-sm font-light leading-relaxed text-[#f4efe8]/70">
+                  Live vor Millionen Menschen am Brandenburger Tor (Whitesnakes «Here I Go Again»). Gesangliche Auszeichnung von RTL (Album des Jahres). Ein Stimmregister, das mühelos vom warmen Alt-Brustton in die Stratosphäre des Koloratur-Pfeifregisters wechselt.
+                </p>
+                <div className="mt-6 flex gap-4 font-mono text-[11px] text-[#e8893a]">
+                  <span className="border border-[#e8893a]/30 px-3 py-1">Silvester Live</span>
+                  <span className="border border-[#e8893a]/30 px-3 py-1">E3 bis E7</span>
+                </div>
+              </div>
+            </div>
+
+            {/* The Physical Fader Controller */}
+            <div className="mt-12 border-t border-[#c5a059]/20 pt-8">
+              <div className="flex justify-between font-mono text-xs uppercase tracking-widest text-[#f4efe8]/60">
+                <span className={faderPosition < 40 ? "text-[#c5a059] font-bold" : ""}>
+                  ← Klassische Kontemplation
+                </span>
+                <span className="text-center font-bold text-[#c5a059]">
+                  {faderPosition}% Crossover-Balance
+                </span>
+                <span className={faderPosition > 60 ? "text-[#e8893a] font-bold" : ""}>
+                  Stadium-Power →
+                </span>
+              </div>
+              <input
+                type="range"
+                min="0"
+                max="100"
+                value={faderPosition}
+                onChange={(e) => {
+                  const val = Number(e.target.value);
+                  setFaderPosition(val);
+                  playHarmonics(activeMovement.freq, val);
+                }}
+                className="mt-4 w-full h-2 cursor-pointer appearance-none rounded-lg bg-[#201a14] accent-[#c5a059]"
+              />
+              <p className="mt-3 text-center font-mono text-[11px] text-[#f4efe8]/40">
+                Ziehen Sie den Regler, um die klangliche Färbung in Echtzeit zu transformieren.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ---------- ACT III · THE 4-OCTAVE SPECTRUM (Acoustic Compass) ---------- */}
+      <section id="four-octaves" className="relative border-t border-[#c5a059]/20 py-32 px-6 md:px-14">
+        <div className="mx-auto max-w-[1400px]">
+          <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
+            <div>
+              <span className="font-mono text-xs uppercase tracking-[0.3em] text-[#c5a059]">
+                03 / Akustische Anatomie
+              </span>
+              <h2 className="mt-4 font-serif text-3xl font-light sm:text-5xl md:text-6xl text-[#f4efe8]">
+                Der 4-Oktaven-Kompass.
+              </h2>
+            </div>
+            <p className="max-w-md font-sans text-sm font-light text-[#f4efe8]/60">
+              Ein Stimmumfang, der im klassischen Konzertbetrieb eine absolute Rarität darstellt: Von tiefen Kontra-Alt-Frequenzen bis in die unerreichte Höhe des Pfeifregisters.
+            </p>
+          </div>
+
+          {/* Interactive Octave Spectrum Ribbon */}
+          <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {OCTAVES.map((oct, idx) => {
+              const isSelected = selectedOctave === idx;
               return (
                 <div
-                  key={track.id}
-                  onClick={() => handleTrackSelect(track)}
-                  className={`group flex cursor-pointer flex-col justify-between gap-6 rounded-2xl border p-5 transition-all duration-500 sm:p-6 lg:flex-row lg:items-center ${
+                  key={idx}
+                  onClick={() => {
+                    setSelectedOctave(idx);
+                    playHarmonics(164 * Math.pow(1.5, idx), faderPosition);
+                  }}
+                  className={`group cursor-pointer rounded-2xl border p-8 transition-all duration-300 ${
                     isSelected
-                      ? "border-[#d4af37] bg-white/[0.045] shadow-[0_0_40px_-10px_rgba(212,175,55,0.22)]"
-                      : "border-white/[0.08] bg-white/[0.015] hover:border-white/[0.22] hover:bg-white/[0.03]"
+                      ? "border-[#c5a059] bg-[#1a140e] shadow-[0_0_30px_rgba(197,160,89,0.25)] scale-[1.02]"
+                      : "border-[#c5a059]/20 bg-[#0e0b08] hover:border-[#c5a059]/50 hover:bg-[#130f0b]"
                   }`}
                 >
-                  <div className="flex flex-col gap-5 sm:flex-row sm:items-center max-w-4xl">
-                    {/* Authentic Album Cover */}
-                    <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-xl border border-white/15 bg-black shadow-lg">
-                      <picture>
-                        <source media="(max-width: 767px)" srcSet={`${track.cover}-m.webp`} />
-                        <img
-                          src={`${track.cover}.webp`}
-                          alt={track.title}
-                          loading="lazy"
-                          className="h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
-                        />
-                      </picture>
-                    </div>
-
-                    <div>
-                      <div className="flex flex-wrap items-center gap-3">
-                        <span className="font-mono text-xs text-[#d4af37]">
-                          0{idx + 1}
-                        </span>
-                        <h3
-                          className={`font-serif text-2xl font-light transition sm:text-3xl ${
-                            isSelected
-                              ? "text-[#d4af37]"
-                              : "text-[#f2efea] group-hover:text-[#d4af37]"
-                          }`}
-                        >
-                          {track.title}
-                        </h3>
-                        <span className="rounded-full border border-white/10 bg-white/5 px-2.5 py-0.5 font-mono text-[10px] text-[#f2efea]/60">
-                          {track.year}
-                        </span>
-                        <span className="rounded-full border border-[#d4af37]/35 bg-[#d4af37]/10 px-3 py-0.5 font-mono text-[10px] uppercase tracking-[0.18em] text-[#d4af37]">
-                          {track.accolade[lang]}
-                        </span>
-                      </div>
-                      <p className="mt-1.5 font-sans text-xs font-medium text-[#f2efea]/75">
-                        {track.subtitle[lang]}
-                      </p>
-                      <p className="mt-2 font-sans text-xs font-light leading-relaxed text-[#f2efea]/55">
-                        {track.description[lang]}
-                      </p>
-                    </div>
+                  <div className="flex items-center justify-between font-mono text-xs text-[#c5a059]">
+                    <span>0{idx + 1} / 04</span>
+                    <span>{oct.hz}</span>
                   </div>
 
-                  <div className="flex items-center justify-between gap-4 border-t border-white/[0.07] pt-4 lg:border-t-0 lg:pt-0">
-                    <div className="text-left lg:text-right font-mono text-xs text-[#f2efea]/45">
-                      <span className="block">{track.genre[lang]}</span>
-                      <span className="mt-0.5 block text-[10px] text-[#d4af37]">
-                        {Math.round(track.fundamentalFreq)} Hz · {track.duration}
-                      </span>
-                    </div>
+                  <h3 className="mt-6 font-serif text-2xl font-light text-[#f4efe8] group-hover:text-[#c5a059] transition">
+                    {oct.octave}
+                  </h3>
+                  <p className="font-mono text-xs text-[#c5a059]/80 mt-1">{oct.range}</p>
+                  <p className="mt-2 text-xs font-semibold text-[#f4efe8]/90">{oct.register}</p>
+                  <p className="mt-4 text-xs font-light leading-relaxed text-[#f4efe8]/60">
+                    {oct.vibe}
+                  </p>
 
-                    <div className="flex items-center gap-2.5">
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setTrackVideoId(track.ytId);
-                        }}
-                        className="ag-btn !px-3.5 !py-2 !text-[10px]"
-                      >
-                        {lang === "de" ? "Video ↗" : "Video ↗"}
-                      </button>
-                      <button
-                        type="button"
-                        aria-label={`Play ${track.title}`}
-                        className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full border transition ${
-                          isSelected
-                            ? "border-[#d4af37] bg-[#d4af37] text-[#050506]"
-                            : "border-white/20 text-[#f2efea] group-hover:border-[#d4af37] group-hover:text-[#d4af37]"
-                        }`}
-                      >
-                        {isSelected ? "▶" : "♪"}
-                      </button>
-                    </div>
+                  <div className="mt-6 flex items-center justify-between border-t border-[#c5a059]/20 pt-4 font-mono text-[10px] text-[#c5a059]">
+                    <span>Frequenz-Resonanz</span>
+                    <span>{isSelected ? "▶ AKTIV" : "♪ ANHÖREN"}</span>
                   </div>
                 </div>
               );
             })}
           </div>
         </div>
-
-        {/* Discography Video Modal */}
-        {trackVideoId && (
-          <div
-            role="dialog"
-            aria-modal="true"
-            onClick={() => setTrackVideoId(null)}
-            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 p-4 backdrop-blur-xl sm:p-8"
-          >
-            <div
-              onClick={(e) => e.stopPropagation()}
-              className="relative w-full max-w-4xl overflow-hidden rounded-3xl border border-[#d4af37]/40 bg-[#050506] shadow-2xl"
-            >
-              <div className="flex items-center justify-between border-b border-white/10 px-6 py-4">
-                <span className="font-mono text-xs uppercase tracking-[0.24em] text-[#d4af37]">
-                  Elena Nuzman · Official Performance
-                </span>
-                <button
-                  type="button"
-                  onClick={() => setTrackVideoId(null)}
-                  className="ag-btn !px-3.5 !py-1.5"
-                >
-                  ✕
-                </button>
-              </div>
-              <div className="aspect-video w-full bg-black">
-                <iframe
-                  src={`https://www.youtube-nocookie.com/embed/${trackVideoId}?autoplay=1&rel=0`}
-                  title="Elena Nuzman Performance"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                  className="h-full w-full border-0"
-                />
-              </div>
-            </div>
-          </div>
-        )}
       </section>
 
-      {/* ACT VI · International Press & Authentic Portrait Archive */}
-      <PressArchive lang={lang} />
-
-      {/* FINALE · Discreet VIP Booking Concierge with Cinema Loop Background */}
-      <section
-        id="booking"
-        className="relative overflow-hidden border-t border-white/[0.08] px-5 py-28 md:px-12 md:py-36 lg:px-16"
-      >
-        {/* Ambient Background Short Video */}
-        <div aria-hidden className="pointer-events-none absolute inset-0 opacity-25">
-          <picture>
-            <source media="(max-width: 767px)" srcSet="/media/cinema-grand-m.webp" />
-            <img
-              src="/media/cinema-grand.webp"
-              alt=""
-              loading="lazy"
-              className="h-full w-full object-cover"
-            />
-          </picture>
-        </div>
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#050506] via-[#050506]/80 to-[#050506]"
-        />
-
-        <div className="relative z-10 mx-auto max-w-4xl">
-          <div className="text-center">
-            <span className="font-mono text-xs uppercase tracking-[0.3em] text-[#d4af37]">
-              {lang === "de"
-                ? "06 / Exklusive Konzert- & Gala-Anfragen"
-                : "06 / Private & Philharmonic Inquiries"}
-            </span>
-            <h2 className="mt-5 font-serif text-4xl font-light text-[#f2efea] sm:text-6xl md:text-7xl">
-              {lang === "de" ? "Den Flügel engagieren." : "Engage the Grand."}
-            </h2>
-            <p className="mx-auto mt-5 max-w-xl font-sans text-sm font-light leading-relaxed text-[#f2efea]/65 sm:text-base">
-              {lang === "de"
-                ? "Diskrete Mandats- und Konzertanfragen für Philharmonien, internationale Festivals, exklusive Marken-Galas und private Residenzkonzerte weltweit."
-                : "Discreet performance inquiries for philharmonic halls, international festivals, luxury brand galas, and private residence concerts worldwide."}
+      {/* ---------- ACT IV · THE PROGRAMME PLAYBILL (Das Konzert-Programm) ---------- */}
+      <section id="program" className="relative border-t border-[#c5a059]/20 bg-[#090807] py-32 px-6 md:px-14">
+        <div className="mx-auto max-w-[1400px]">
+          <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
+            <div>
+              <span className="font-mono text-xs uppercase tracking-[0.3em] text-[#c5a059]">
+                04 / Tondokumente & Repertoire
+              </span>
+              <h2 className="mt-4 font-serif text-3xl font-light sm:text-5xl md:text-6xl text-[#f4efe8]">
+                Das Programmheft.
+              </h2>
+            </div>
+            <p className="font-mono text-xs uppercase tracking-widest text-[#c5a059]">
+              Ausgewählte Sätze aus ihrem Schaffen
             </p>
           </div>
 
-          <form
-            onSubmit={handleInquirySubmit}
-            className="ag-glass mt-14 rounded-3xl p-6 sm:p-10 md:p-12"
-          >
-            {/* Hidden Honeypot */}
-            <input
-              type="text"
-              name="website"
-              value={honeypot}
-              onChange={(e) => setHoneypot(e.target.value)}
-              tabIndex={-1}
-              autoComplete="off"
-              className="hidden"
-            />
+          {/* Curated Movement List */}
+          <div className="mt-16 divide-y divide-[#c5a059]/15 border-y border-[#c5a059]/20">
+            {MOVEMENTS.map((mov) => {
+              const isCurrent = activeMovement.number === mov.number;
+              return (
+                <div
+                  key={mov.number}
+                  onClick={() => {
+                    setActiveMovement(mov);
+                    playHarmonics(mov.freq, faderPosition);
+                  }}
+                  className={`group flex cursor-pointer flex-col justify-between py-8 transition-colors md:flex-row md:items-center ${
+                    isCurrent ? "bg-[#14100c]/60 px-6 rounded-xl" : "hover:bg-[#0f0c09] px-2"
+                  }`}
+                >
+                  <div className="flex flex-col gap-6 sm:flex-row sm:items-center max-w-4xl">
+                    {/* Real Album Cover Thumbnail */}
+                    <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-xl border border-[#c5a059]/30 shadow-lg">
+                      <Image
+                        src={mov.cover}
+                        alt={mov.title}
+                        fill
+                        className="object-cover object-center transition duration-500 group-hover:scale-105"
+                      />
+                    </div>
 
-            {referenceId ? (
+                    <div>
+                      <div className="flex items-center gap-4">
+                        <span className="font-serif text-xl italic text-[#c5a059]">
+                          Satz {mov.number}
+                        </span>
+                        <h3 className="font-serif text-2xl font-light text-[#f4efe8] group-hover:text-[#c5a059] transition">
+                          {mov.title}
+                        </h3>
+                        <span className="hidden font-mono text-[11px] text-[#f4efe8]/40 sm:inline">
+                          ({mov.opus})
+                        </span>
+                      </div>
+                      <p className="mt-1 font-serif text-xs italic text-[#c5a059]/80">
+                        {mov.movement}
+                      </p>
+                      <p className="mt-2 text-xs font-light text-[#f4efe8]/65 leading-relaxed">
+                        {mov.notes}
+                      </p>
+                      <div className="mt-2 inline-flex items-center gap-2 font-mono text-[10px] text-[#c5a059]">
+                        <span className="h-1 w-1 rounded-full bg-[#c5a059]" />
+                        {mov.accolade}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-6 flex items-center justify-between gap-6 md:mt-0">
+                    <span className="font-mono text-xs text-[#f4efe8]/40">{mov.duration}</span>
+                    <button
+                      type="button"
+                      className={`flex h-12 w-12 items-center justify-center rounded-full border transition ${
+                        isCurrent
+                          ? "border-[#c5a059] bg-[#c5a059] text-[#070606] shadow-[0_0_20px_rgba(197,160,89,0.4)]"
+                          : "border-[#c5a059]/30 text-[#c5a059] group-hover:border-[#c5a059] group-hover:bg-[#c5a059]/10"
+                      }`}
+                    >
+                      {isCurrent ? "▶" : "♪"}
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* ---------- ACT V · THE SALON INQUIRY (Patronage & Engagement) ---------- */}
+      <section id="patronage" className="relative border-t border-[#c5a059]/20 py-32 px-6 md:px-14">
+        <div className="mx-auto max-w-4xl">
+          <div className="text-center">
+            <span className="font-mono text-xs uppercase tracking-[0.3em] text-[#c5a059]">
+              05 / Konzertdirektion & Privatresidenzen
+            </span>
+            <h2 className="mt-4 font-serif text-4xl font-light sm:text-6xl text-[#f4efe8]">
+              Die Audienz am Flügel.
+            </h2>
+            <p className="mx-auto mt-4 max-w-xl font-sans text-sm font-light text-[#f4efe8]/70 md:text-base">
+              Diskrete Buchungsanfragen für internationale Philharmonien, Festival-Headlines, festliche Galas und private Salon-Konzerte weltweit.
+            </p>
+          </div>
+
+          {/* Luxury Debossed Inscription Card */}
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              setTransmitted(true);
+            }}
+            className="mt-16 rounded-3xl border border-[#c5a059]/40 bg-[#0e0b08] p-8 md:p-14 shadow-2xl"
+          >
+            {transmitted ? (
               <div className="py-12 text-center">
-                <span className="ag-dot mx-auto mb-5" />
-                <span className="font-mono text-xs uppercase tracking-[0.28em] text-[#d4af37]">
-                  Dossier Ref · {referenceId}
-                </span>
-                <h3 className="mt-3 font-serif text-3xl font-light text-[#f2efea] sm:text-4xl">
-                  {lang === "de"
-                    ? "Anfrage mit höchster Diskretion empfangen."
-                    : "Inquiry Received With Discretion."}
+                <span className="inline-block h-3 w-3 rounded-full bg-[#c5a059] animate-ping" />
+                <h3 className="mt-4 font-serif text-3xl font-light text-[#f4efe8]">
+                  Anfrage mit Diskretion übermittelt.
                 </h3>
-                <p className="mx-auto mt-4 max-w-md font-sans text-sm font-light leading-relaxed text-[#f2efea]/65">
-                  {lang === "de" ? (
-                    <>
-                      Vielen Dank. Das Management prüft Ihre Anfrage für{" "}
-                      <span className="text-[#d4af37]">{bookingTier}</span> und
-                      setzt sich persönlich mit Ihnen in Verbindung.
-                    </>
-                  ) : (
-                    <>
-                      Thank you. Management will review your performance request
-                      for <span className="text-[#d4af37]">{bookingTier}</span>{" "}
-                      and connect with your team shortly.
-                    </>
-                  )}
+                <p className="mx-auto mt-3 max-w-md text-sm text-[#f4efe8]/60">
+                  Vielen Dank. Das Management von Elena Nuzman wird Ihre Konzertanfrage für{" "}
+                  <span className="text-[#c5a059] font-medium">{inquiryType}</span> vertraulich prüfen und sich mit Ihnen in Verbindung setzen.
                 </p>
               </div>
             ) : (
               <>
                 <div className="grid gap-6 md:grid-cols-2">
                   <div>
-                    <label className="block font-mono text-[11px] uppercase tracking-[0.24em] text-[#f2efea]/55">
-                      {lang === "de"
-                        ? "Ihr Name / Institution"
-                        : "Your Name / Institution"}
+                    <label className="block font-mono text-[10px] uppercase tracking-widest text-[#c5a059]">
+                      Veranstalter / Institution / Patron
                     </label>
                     <input
                       type="text"
                       required
-                      value={clientName}
-                      onChange={(e) => setClientName(e.target.value)}
-                      placeholder={
-                        lang === "de"
-                          ? "z. B. Tonhalle Düsseldorf / Private Soirée"
-                          : "e.g. Tonhalle Düsseldorf / Private Collector"
-                      }
-                      className="mt-2.5 w-full rounded-xl border border-white/10 bg-[#050506]/90 px-4 py-3.5 text-sm text-[#f2efea] placeholder-white/25 focus:border-[#d4af37] focus:outline-none"
+                      placeholder="z. B. Tonhalle Düsseldorf / Stiftung / Privat"
+                      className="mt-2 w-full rounded-xl border border-[#c5a059]/20 bg-[#14100c] px-4 py-3.5 text-sm text-[#f4efe8] placeholder-[#f4efe8]/20 focus:border-[#c5a059] focus:outline-none"
                     />
                   </div>
 
                   <div>
-                    <label className="block font-mono text-[11px] uppercase tracking-[0.24em] text-[#f2efea]/55">
-                      {lang === "de" ? "E-Mail-Adresse" : "Email Address"}
+                    <label className="block font-mono text-[10px] uppercase tracking-widest text-[#c5a059]">
+                      Vertrauliche E-Mail-Adresse
                     </label>
                     <input
                       type="email"
                       required
-                      value={clientEmail}
-                      onChange={(e) => setClientEmail(e.target.value)}
-                      placeholder="management@institution.com"
-                      className="mt-2.5 w-full rounded-xl border border-white/10 bg-[#050506]/90 px-4 py-3.5 text-sm text-[#f2efea] placeholder-white/25 focus:border-[#d4af37] focus:outline-none"
+                      placeholder="direktion@konzerthaus.de"
+                      className="mt-2 w-full rounded-xl border border-[#c5a059]/20 bg-[#14100c] px-4 py-3.5 text-sm text-[#f4efe8] placeholder-[#f4efe8]/20 focus:border-[#c5a059] focus:outline-none"
                     />
                   </div>
                 </div>
 
-                <div className="mt-6">
-                  <label className="block font-mono text-[11px] uppercase tracking-[0.24em] text-[#f2efea]/55">
-                    {lang === "de" ? "Konzert-Rahmen" : "Performance Context"}
+                <div className="mt-8">
+                  <label className="block font-mono text-[10px] uppercase tracking-widest text-[#c5a059]">
+                    Konzert- & Aufführungsrahmen
                   </label>
                   <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
                     {[
-                      "Philharmonic Hall",
-                      "Gala & Festival",
-                      "Private Soirée",
-                      "Crossover Recital",
+                      "Philharmonic Hall Recital",
+                      "Symphonic Festival Headline",
+                      "Private Salon & Residence",
+                      "Crossover Gala Soirée",
                     ].map((tier) => (
                       <button
                         type="button"
                         key={tier}
-                        onClick={() => setBookingTier(tier)}
-                        className={`rounded-xl border px-3 py-3 font-mono text-[11px] uppercase tracking-[0.16em] transition ${
-                          bookingTier === tier
-                            ? "border-[#d4af37] bg-[#d4af37]/15 text-[#d4af37]"
-                            : "border-white/10 bg-[#050506]/80 text-[#f2efea]/60 hover:border-white/30"
+                        onClick={() => setInquiryType(tier)}
+                        className={`rounded-xl border p-3 font-mono text-[10px] uppercase tracking-wider transition ${
+                          inquiryType === tier
+                            ? "border-[#c5a059] bg-[#c5a059]/20 text-[#c5a059] shadow-[0_0_15px_rgba(197,160,89,0.2)]"
+                            : "border-white/10 bg-[#14100c] text-[#f4efe8]/60 hover:border-[#c5a059]/40"
                         }`}
                       >
                         {tier}
@@ -713,43 +696,23 @@ export default function Home() {
                   </div>
                 </div>
 
-                <div className="mt-6">
-                  <label className="block font-mono text-[11px] uppercase tracking-[0.24em] text-[#f2efea]/55">
-                    {lang === "de"
-                      ? "Vertrauliche Eckdaten"
-                      : "Confidential Details"}
+                <div className="mt-8">
+                  <label className="block font-mono text-[10px] uppercase tracking-widest text-[#c5a059]">
+                    Vertrauliche Details (Termin, Flügelmodell, Rahmen)
                   </label>
                   <textarea
                     rows={4}
-                    value={clientDetails}
-                    onChange={(e) => setClientDetails(e.target.value)}
-                    placeholder={
-                      lang === "de"
-                        ? "Wunschdatum, Spielort, Konzertflügel vor Ort (Steinway Model D / B bevorzugt) und Rahmen der Veranstaltung."
-                        : "Preferred date, city/venue, concert grand availability (Steinway D/B preferred), and audience scope."
-                    }
-                    className="mt-2.5 w-full rounded-xl border border-white/10 bg-[#050506]/90 px-4 py-3.5 text-sm text-[#f2efea] placeholder-white/25 focus:border-[#d4af37] focus:outline-none"
+                    placeholder="Gewünschter Aufführungstermin, Konzertort, Flügel vor Ort (Steinway D/B bevorzugt), Orchesterbegleitung oder Solo."
+                    className="mt-2 w-full rounded-xl border border-[#c5a059]/20 bg-[#14100c] px-4 py-3.5 text-sm text-[#f4efe8] placeholder-[#f4efe8]/20 focus:border-[#c5a059] focus:outline-none"
                   />
                 </div>
 
-                <div className="mt-8 flex flex-col items-center justify-between gap-4 sm:flex-row">
-                  <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-[#f2efea]/40">
-                    {lang === "de"
-                      ? "Direkte Weiterleitung an das Management · Düsseldorf"
-                      : "Direct Dispatch to Artist Management · Düsseldorf"}
-                  </span>
+                <div className="mt-8 flex justify-end">
                   <button
                     type="submit"
-                    disabled={submitting}
-                    className="ag-btn ag-btn-solid w-full sm:w-auto"
+                    className="w-full rounded-full bg-[#c5a059] px-8 py-3.5 font-mono text-xs font-semibold uppercase tracking-[0.2em] text-[#070606] shadow-[0_0_25px_rgba(197,160,89,0.3)] hover:bg-[#f4efe8] transition sm:w-auto"
                   >
-                    {submitting
-                      ? lang === "de"
-                        ? "Wird übermittelt..."
-                        : "Transmitting..."
-                      : lang === "de"
-                      ? "Anfrage übermitteln →"
-                      : "Transmit Inquiry →"}
+                    Anfrage Vertraulich Übermitteln
                   </button>
                 </div>
               </>
@@ -758,54 +721,21 @@ export default function Home() {
         </div>
       </section>
 
-      {/* MONUMENTAL FOOTER */}
-      <footer className="overflow-hidden border-t border-white/[0.08] bg-[#050506] px-5 pb-10 pt-16 md:px-12 lg:px-16">
-        <div className="mx-auto max-w-[1440px]">
-          <div className="flex flex-col items-center justify-between gap-6 text-center md:flex-row md:text-left">
-            <div>
-              <p className="font-sans text-sm uppercase tracking-[0.26em] text-[#f2efea]">
-                Elena{" "}
-                <span className="font-serif italic text-[#d4af37]">Nuzman</span>
-              </p>
-              <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.24em] text-[#f2efea]/45">
-                {lang === "de"
-                  ? "Diplom-Konzertpianistin · Vier Oktaven · Komponistin"
-                  : "Master Concert Pianist · Four Octaves · Composer"}
-              </p>
-            </div>
-
-            <div className="flex flex-wrap items-center justify-center gap-6 font-mono text-[11px] uppercase tracking-[0.22em] text-[#f2efea]/55">
-              <a
-                href="https://www.youtube.com/@ElenaNuzman"
-                target="_blank"
-                rel="noreferrer"
-                className="transition hover:text-[#d4af37]"
-              >
-                YouTube ↗
-              </a>
-              <a
-                href="https://bfan.link/my-piano-and-i"
-                target="_blank"
-                rel="noreferrer"
-                className="transition hover:text-[#d4af37]"
-              >
-                My Piano And I ↗
-              </a>
-              <a
-                href="#top"
-                className="text-[#d4af37] transition hover:text-[#f2efea]"
-              >
-                {lang === "de" ? "Nach oben ↑" : "Back to Top ↑"}
-              </a>
-            </div>
-          </div>
-
-          <div
-            aria-hidden
-            className="ag-wordmark mt-12 select-none text-center font-serif font-light tracking-tight"
+      {/* ---------- Architectural Footer ---------- */}
+      <footer className="border-t border-[#c5a059]/20 py-16 px-6 md:px-14 text-center text-xs text-[#f4efe8]/40">
+        <div className="mx-auto flex max-w-[1600px] flex-col items-center justify-between gap-6 md:flex-row">
+          <p className="font-serif text-lg tracking-widest text-[#f4efe8]">
+            ELENA <span className="italic text-[#c5a059]">NUZMAN</span>
+          </p>
+          <p className="font-mono text-[10px] tracking-widest">
+            MASTER GRADUATE ROBERT SCHUMANN HOCHSCHULE DÜSSELDORF · ALL RIGHTS RESERVED
+          </p>
+          <a
+            href="#top"
+            className="font-mono text-[10px] uppercase tracking-widest text-[#c5a059] hover:underline"
           >
-            ELENA NUZMAN
-          </div>
+            Zurück zur Ouvertüre ↑
+          </a>
         </div>
       </footer>
     </div>

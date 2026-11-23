@@ -3,12 +3,13 @@
 @tailwind utilities;
 
 :root {
-  --ink: 5 5 6;
-  --paper: 242 239 234;
-  --mute: 138 136 140;
-  --line: 255 255 255;
-  --accent: 212 175 55; /* Champagne Gold */
-  --raised: 14 14 16;
+  /* Warm Walnut / Espresso Concert Hall instead of dead pure black */
+  --ink: 18 14 11;
+  --paper: 246 240 230;
+  --mute: 168 156 142;
+  --line: 255 245 230;
+  --accent: 218 165 92; /* Warm Amber / Champagne Gold */
+  --raised: 28 22 18;
 }
 
 html,
@@ -17,7 +18,6 @@ body {
   color: rgb(var(--paper));
   overflow-x: hidden;
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
-  color-scheme: dark;
 }
 
 ::selection {
@@ -25,12 +25,35 @@ body {
   color: rgb(var(--paper));
 }
 
+/* ---------- Heller Teil: Creme, warm, lebendig (wie private-studio) ---------- */
+.cream {
+  --ink: 246 240 230;
+  --paper: 30 24 20;
+  --mute: 120 108 96;
+  --line: 30 24 20;
+  --accent: 186 104 40;
+  --raised: 238 230 216;
+  background:
+    radial-gradient(120% 60% at 50% 0%, rgb(255 251 244), rgb(var(--ink)) 62%),
+    rgb(var(--ink));
+  color: rgb(var(--paper));
+  color-scheme: light;
+}
+
+/* Warm Espresso-Amber Stage Background for Evening Chapters (not pitch black) */
+.warm-stage {
+  background:
+    radial-gradient(90% 55% at 50% 0%, rgb(58 38 20 / 0.45), transparent 70%),
+    radial-gradient(80% 50% at 80% 85%, rgb(48 32 16 / 0.4), transparent 70%),
+    rgb(18 14 11);
+}
+
 @layer components {
   /* Glas Pillen & Container */
   .ag-glass {
-    background: linear-gradient(180deg, rgb(255 255 255 / 0.08), rgb(255 255 255 / 0.025));
-    border: 1px solid rgb(255 255 255 / 0.1);
-    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.09), 0 14px 44px -18px rgb(0 0 0 / 0.85);
+    background: linear-gradient(180deg, rgb(255 248 238 / 0.09), rgb(255 248 238 / 0.03));
+    border: 1px solid rgb(255 245 230 / 0.12);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.1), 0 14px 44px -18px rgb(0 0 0 / 0.75);
     backdrop-filter: blur(20px) saturate(1.35);
     -webkit-backdrop-filter: blur(20px) saturate(1.35);
   }
@@ -44,13 +67,13 @@ body {
     gap: 0.5rem;
     border-radius: 999px;
     padding: 0.72rem 1.38rem;
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 400;
-    letter-spacing: 0.16em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     color: rgb(var(--paper));
-    border: 1px solid rgb(255 255 255 / 0.15);
-    background: rgb(255 255 255 / 0.04);
+    border: 1px solid rgb(var(--paper) / 0.18);
+    background: rgb(var(--paper) / 0.05);
     transition: background-color 0.7s cubic-bezier(0.16, 1, 0.3, 1),
                 color 0.7s,
                 border-color 0.7s,
@@ -60,12 +83,12 @@ body {
 
   .ag-btn:hover {
     border-color: rgb(var(--accent) / 0.75);
-    box-shadow: 0 0 0 1px rgb(var(--accent) / 0.3), 0 10px 40px -10px rgb(var(--accent) / 0.5);
+    box-shadow: 0 0 0 1px rgb(var(--accent) / 0.3), 0 10px 40px -10px rgb(var(--accent) / 0.45);
   }
 
   .ag-btn-solid {
     background: rgb(var(--accent));
-    color: rgb(var(--ink));
+    color: #140e0a;
     border-color: transparent;
     font-weight: 500;
   }
@@ -74,6 +97,62 @@ body {
     background: rgb(var(--paper));
     color: rgb(var(--ink));
   }
+
+  .cream .ag-btn {
+    color: rgb(var(--paper));
+    border-color: rgb(var(--paper) / 0.2);
+    background: rgb(255 255 255 / 0.65);
+  }
+
+  .cream .ag-btn-solid {
+    background: rgb(var(--paper));
+    color: rgb(var(--ink));
+  }
+
+  .cream .ag-btn-solid:hover {
+    background: rgb(var(--accent));
+    color: #fff;
+  }
+
+  .cream .ag-glass {
+    background: rgb(255 255 255 / 0.68);
+    border-color: rgb(30 24 20 / 0.1);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.8), 0 18px 45px -22px rgb(60 40 20 / 0.22);
+  }
+}
+
+/* Navigation ueber hellem Creme-Grund */
+.ag-nav.is-solid {
+  background: linear-gradient(180deg, rgb(18 14 11 / 0.88), rgb(18 14 11 / 0));
+}
+
+.ag-nav.on-cream {
+  --paper: 30 24 20;
+  --ink: 246 240 230;
+  --accent: 186 104 40;
+}
+
+.ag-nav.on-cream .ag-glass {
+  background: rgb(255 255 255 / 0.65);
+  border-color: rgb(30 24 20 / 0.12);
+  box-shadow: 0 10px 30px -20px rgb(60 40 20 / 0.35);
+}
+
+.ag-nav.on-cream.is-solid {
+  background: linear-gradient(180deg, rgb(246 240 230 / 0.92), rgb(246 240 230 / 0));
+}
+
+/* Eyebrow */
+.ag-eyebrow {
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgb(var(--accent));
+}
+
+.cream .ag-eyebrow {
+  color: rgb(var(--accent));
 }
 
 /* Pulsierender Akzentpunkt */
@@ -142,194 +221,175 @@ body {
   transform: none;
 }
 
-/* Lichtkarten mit Maus-Radiallicht */
+/* Lift: Gebuerstete Messingtueren & Rahmen (wie private-studio Lift.tsx) */
+.lift-door {
+  background: linear-gradient(90deg, #2a1d12, #6b4a26 18%, #c59655 50%, #6b4a26 82%, #2a1d12);
+  transition: none;
+}
+
+.lift-door::after {
+  content: "";
+  position: absolute;
+  inset: 8% 12%;
+  border: 1px solid rgb(255 220 170 / 0.35);
+  background: repeating-linear-gradient(90deg, rgb(0 0 0 / 0.08) 0 2px, transparent 2px 9px);
+}
+
+.lift-door-l {
+  box-shadow: inset -2px 0 0 rgb(0 0 0 / 0.5);
+}
+
+.lift-door-r {
+  box-shadow: inset 2px 0 0 rgb(0 0 0 / 0.5);
+}
+
+.lift-frame {
+  box-shadow: inset 0 0 0 12px #1c130c, inset 0 0 0 14px rgb(255 200 130 / 0.4);
+}
+
+/* Dimensionswechsel-Portal: warm-dunkel -> helles Creme */
+.hs-portal {
+  background: radial-gradient(
+    circle,
+    rgb(246 240 230) 0 62%,
+    rgb(255 226 186) 70%,
+    rgb(255 190 120 / 0) 71%
+  );
+  box-shadow: 0 0 6vmax 1.5vmax rgb(255 180 110 / 0.35);
+}
+
+/* Haengende Buchstaben & Feder-Karten im Creme-Kapitel (wie private-studio Projects.tsx) */
+.hang-l {
+  padding-top: var(--h);
+}
+
+.hang-s {
+  height: var(--h);
+}
+
+.pj {
+  opacity: 0;
+  transform: translateY(80px) scale(0.88) rotate(var(--rot, -2.5deg));
+}
+
+.pj-r {
+  --rot: 2.5deg;
+}
+
+.pj.is-in {
+  animation: pjPop 1.25s cubic-bezier(0.34, 1.56, 0.64, 1) var(--d, 0ms) forwards;
+}
+
+@keyframes pjPop {
+  0% {
+    opacity: 0;
+    transform: translateY(80px) scale(0.88) rotate(var(--rot, -2.5deg));
+  }
+  60% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.pj-media img,
+.pj-media video {
+  transition: transform 1.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.pj-media:hover img,
+.pj-media:hover video {
+  transform: scale(1.04);
+}
+
+/* Office / Salon Formular auf Creme-Grund */
+.office-form {
+  background: rgb(30 24 20 / 0.1);
+}
+
+.office-form label {
+  display: block;
+  background: rgb(255 255 255 / 0.78);
+}
+
+.office-form input,
+.office-form textarea {
+  width: 100%;
+  background: transparent;
+  border: 0;
+  resize: none;
+  padding: 1.05rem 1.2rem;
+  font-size: 14px;
+  font-weight: 300;
+  color: rgb(30 24 20);
+}
+
+.office-form input::placeholder,
+.office-form textarea::placeholder {
+  color: rgb(30 24 20 / 0.42);
+}
+
+.office-form input:focus,
+.office-form textarea:focus {
+  outline: none;
+  background: rgb(255 255 255 / 0.95);
+}
+
+.office-form > div {
+  background: rgb(255 255 255 / 0.78);
+}
+
+/* Lichtkarten */
 .ag-card {
   position: relative;
   --x: -400px;
   --y: -400px;
   background:
-    radial-gradient(120% 60% at 50% 125%, rgb(var(--accent) / 0.14), rgb(var(--accent) / 0.03) 45%, transparent 70%),
-    linear-gradient(180deg, rgb(255 255 255 / 0.04), rgb(255 255 255 / 0.012));
-  border: 1px solid rgb(255 255 255 / 0.08);
+    radial-gradient(120% 60% at 50% 125%, rgb(var(--accent) / 0.16), rgb(var(--accent) / 0.04) 45%, transparent 70%),
+    linear-gradient(180deg, rgb(255 255 255 / 0.05), rgb(255 255 255 / 0.015));
+  border: 1px solid rgb(var(--paper) / 0.1);
   transition: transform 0.85s cubic-bezier(0.16, 1, 0.3, 1),
               border-color 0.85s,
               box-shadow 0.85s;
 }
 
-.ag-card::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.7s;
-  background: radial-gradient(420px circle at var(--x) var(--y), rgb(var(--accent) / 0.16), transparent 45%);
-}
-
-.ag-card::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  padding: 1px;
-  pointer-events: none;
-  background: radial-gradient(260px circle at var(--x) var(--y), rgb(var(--accent) / 0.85), transparent 60%);
-  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  opacity: 0;
-  transition: opacity 0.7s;
-}
-
-.ag-cards:hover .ag-card::before,
-.ag-cards:hover .ag-card::after,
-.ag-card:hover::before,
-.ag-card:hover::after {
-  opacity: 1;
+.cream .ag-card {
+  background:
+    radial-gradient(120% 60% at 50% 125%, rgb(186 104 40 / 0.12), transparent 70%),
+    rgb(255 255 255 / 0.75);
+  border: 1px solid rgb(30 24 20 / 0.1);
+  box-shadow: 0 24px 60px -28px rgb(60 30 10 / 0.18);
 }
 
 .ag-card:hover {
   transform: translateY(-4px);
-  border-color: rgb(var(--accent) / 0.4);
-  box-shadow: 0 20px 50px -20px rgb(var(--accent) / 0.25);
-}
-
-/* Erlebniswelten / Stage Doors: Tueren, die sich oeffnen */
-@media (min-width: 768px) {
-  .wl-door {
-    flex: 1 1 0;
-    min-width: 0;
-    transition: flex-grow 1.2s cubic-bezier(0.76, 0, 0.24, 1);
-    cursor: pointer;
-  }
-  .wl-door.is-open {
-    flex-grow: 6.5;
-  }
-  .wl-door .wl-copy {
-    opacity: 0;
-    transform: translateY(16px);
-    transition: opacity 0.6s, transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  .wl-door.is-open .wl-copy {
-    opacity: 1;
-    transform: none;
-    transition-delay: 0.45s;
-  }
-  .wl-door .wl-vertical {
-    writing-mode: vertical-rl;
-    transform: rotate(180deg);
-    transition: opacity 0.6s;
-  }
-  .wl-door.is-open .wl-vertical {
-    opacity: 0;
-  }
-  .wl-door .wl-media {
-    filter: saturate(0.55) brightness(0.55);
-    transform: scale(1.1);
-    transition: filter 1.2s, transform 1.6s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  .wl-door.is-open .wl-media {
-    filter: none;
-    transform: scale(1);
-    animation: wlQuake 0.7s cubic-bezier(0.36, 0.07, 0.19, 0.97) 0.3s both;
-  }
-  .wl-door.is-open .wl-flash {
-    animation: wlFlash 1.4s ease-out 0.25s both;
-  }
-}
-
-@media (max-width: 767px) {
-  .wl-door .wl-vertical {
-    display: none;
-  }
-}
-
-.wl-flash {
-  background: radial-gradient(60% 60% at 50% 55%, rgb(212 175 55 / 0.5), transparent 70%);
-  opacity: 0;
-  mix-blend-mode: screen;
-}
-
-@keyframes wlFlash {
-  0% {
-    opacity: 0;
-  }
-  18% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
-}
-
-@keyframes wlQuake {
-  10%,
-  90% {
-    transform: translate3d(-1px, 0, 0) scale(1.01);
-  }
-  20%,
-  80% {
-    transform: translate3d(2px, -1px, 0) scale(1.01);
-  }
-  30%,
-  50%,
-  70% {
-    transform: translate3d(-2px, 1px, 0) scale(1.01);
-  }
-  40%,
-  60% {
-    transform: translate3d(2px, 0, 0) scale(1.01);
-  }
-  100% {
-    transform: none;
-  }
-}
-
-/* Laufband */
-.ag-marquee {
-  mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
-}
-
-.ag-marquee-track {
-  animation: agMarquee 42s linear infinite;
-}
-
-@keyframes agMarquee {
-  to {
-    transform: translateX(-50%);
-  }
+  border-color: rgb(var(--accent) / 0.45);
 }
 
 /* Monumentale Wortmarke im Fuss */
 .ag-wordmark {
-  font-size: clamp(3.2rem, 13.5vw, 14.5rem);
-  line-height: 0.88;
-  background: linear-gradient(180deg, rgb(var(--paper) / 0.85), rgb(var(--accent) / 0.25) 60%, rgb(var(--paper) / 0.03) 95%);
+  font-size: clamp(3rem, 13.5vw, 14.5rem);
+  line-height: 0.85;
+  background: linear-gradient(180deg, rgb(30 24 20 / 0.85), rgb(186 104 40 / 0.3) 65%, rgb(30 24 20 / 0.04) 98%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .kin-c {
+  .kin-c,
+  .pj {
     opacity: 1;
     transform: none;
     transition: none;
   }
+  .pj.is-in,
   .eh-layer .eh-media,
-  .wl-door,
-  .wl-door .wl-media {
+  .ag-dot {
+    animation: none !important;
     transform: none;
     transition: none;
-    animation: none !important;
-  }
-  .wl-flash {
-    display: none;
-  }
-  .ag-marquee-track,
-  .ag-dot {
-    animation: none;
   }
 }

@@ -110,7 +110,7 @@ export default function ScrollStage({ lang }: { lang: Lang }) {
     <section
       id="story"
       ref={rootRef}
-      className="relative h-[320vh] border-t border-white/[0.08] bg-[#050506]"
+      className="warm-stage relative h-[320vh] border-t border-white/[0.08]"
     >
       <div className="sticky top-0 h-[100svh] w-full overflow-hidden">
         {/* Background Scroll-Scrubbed Video (-g 1) + Fallback WebP */}
@@ -120,7 +120,7 @@ export default function ScrollStage({ lang }: { lang: Lang }) {
             src="/media/cinema-keys.webp"
             alt=""
             loading="lazy"
-            className="absolute inset-0 h-full w-full object-cover opacity-65"
+            className="absolute inset-0 h-full w-full object-cover opacity-75"
           />
         </picture>
         <video
@@ -130,17 +130,17 @@ export default function ScrollStage({ lang }: { lang: Lang }) {
           preload="auto"
           poster="/media/cinema-keys.webp"
           aria-hidden
-          className="absolute inset-0 h-full w-full object-cover opacity-75"
+          className="absolute inset-0 h-full w-full object-cover opacity-80"
         />
 
-        {/* Chiaroscuro Gradients */}
+        {/* Warm Walnut Chiaroscuro Gradients */}
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#050506] via-[#050506]/45 to-[#050506]/80"
+          className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#140f0b] via-[#140f0b]/35 to-[#140f0b]/75"
         />
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#050506]/90 via-[#050506]/40 to-transparent"
+          className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#140f0b]/85 via-[#140f0b]/30 to-transparent"
         />
 
         {/* Pinned Stage Content */}
