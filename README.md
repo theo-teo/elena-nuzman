@@ -1,45 +1,74 @@
-# Elena Nuzman · The Concert Experience
-> A Concert Grand. Four Octaves. Pure Gravity.
+# ELENA NUZMAN — BETWEEN SILENCE & SOUND
+### An Award-Worthy Cinematic Scrollytelling Experience
 
-Massgeschneiderte, filmische Scroll-Telling-Inszenierung für die internationale Diplom-Konzertpianistin, Komponistin und Vier-Oktaven-Crossover-Sängerin **Elena Nuzman**.
-
-Entworfen und realisiert nach dem **Private Studio / Hidden Story** Codex.
+Eine massgeschneiderte, cineastische Scrollytelling-Webseite für die internationale Konzertpianistin und Sängerin **Elena Nuzman**.
 
 ---
 
-## 1. Architektur & Scroll-Telling-Mechanismen (6 Akte)
+## 🎹 Über das Projekt
 
-1. **Prolog · `EmotionHero` (`components/EmotionHero.tsx`):**
-   * Vier geschichtete 100svh-Kinoszenen mit echten Identitäts-Stills (`fal-ai/flux-pro/kontext` aus Elenas Originalporträts) und bedarfsgesteuerten 5-Sekunden-Kino-Kurzvideos (`fal-ai/kling-video/v2.5-turbo/pro/image-to-video`).
-   * Responsive `<picture>`-Kette (`-m.webp` ab 11 KB für Mobilgeräte, `.webp` für Desktop) sowie separate Mobile- (`-m.mp4` ab 144 KB) und Desktop-Kurzfilme (`.mp4`).
-   * Zweisprachige Echtzeit-Umschaltung (`DE` / `EN`), Liszt-Akkord-Synthesizer (Web Audio API), runde Vorschaubilder und schwebender Anfrage-Knopf (`.eh-ask`).
-2. **Akt I · `Kinetic` Manifest (`components/Kinetic.tsx`):**
-   * Buchstabe für Buchstabe aufsteigende 3D-Typografie (`rotateX(-55deg)`) mit IntersectionObserver und `prefers-reduced-motion`-Respektierung.
-3. **Akt II · `ScrollStage` (`components/ScrollStage.tsx`):**
-   * Gepinnte `320vh`-Bühne mit einzelbildgenauem Scroll-Scrubbing (`-g 1` Keyframe-Kodierung von `cinema-keys.mp4` + iOS-Touch-Freigabe) über drei biografische Kapitel und echte Archivaufnahmen aus Schloss Burg.
-4. **Akt III · `StageDoors` (`components/StageDoors.tsx`):**
-   * Fünf interaktive Bühnentore nebeneinander (`flex-grow: 6.5` in 1200 ms `cubic-bezier`, goldener Lichtstoss `.wl-flash` und laufender Kurzfilm im aktiven Tor; auf Mobilgeräten vertikal gestapelt mit `IntersectionObserver`-Autoplay).
-5. **Akt IV · `VoiceLab` (`components/VoiceLab.tsx` & `components/VoiceWave.tsx`):**
-   * Interaktives Vier-Oktaven-Frequenzlabor (`E3 · 164.8 Hz` bis `E7 · 1046+ Hz`) gekoppelt an die 60fps-Canvas-Stimmkurve und mehrstimmige Steinway-Obertöne.
-   * Vier echte Live-Konzert- und Musikfilme (*Konzert Löwenpalais Berlin*, *Showreel 2025*, *Liebesträume Official*, *Live am Brandenburger Tor*) mit Konzertsaal-Lightbox-Modal.
-6. **Akt V & VI · Diskographie, `PressArchive` (`components/PressArchive.tsx`) & `/api/inquiry`:**
-   * Sechs verifizierte Alben & Singles (*My Piano And I* 2025, *Liebesträume* IMPALA Silver, *I Go Ahead* 2025, *Here I Go Again*, *I Believe In You* RTL Album des Jahres, *Nur die Sieger steh'n im Licht* ABBA-autorisiert).
-   * Fünf echte internationale Magazin-Cover (**Rolling Stone USA**, **Harper's Bazaar USA**, **Vogue Miami**, **Vogue Athens**, **Cosmopolitan UK**) mit mausfolgendem Radiallicht (`--x`, `--y` auf `.ag-card`) und Cover-Reader-Modal.
-   * Diskreter VIP-Buchungs-Concierge (`/api/inquiry`) mit Honeypot-Schutz und Dossier-Referenznummer.
+Dieses Werk wurde nach den Prinzipien des diskreten Luxus und des cineastischen Storytellings entwickelt. Es ist kein klassisches Künstlerportfolio, sondern ein interaktives digitales Konzerterlebnis in 7 Kapiteln:
+
+1. **Chapter 01 — The Overture:** Einstieg aus der Dunkelheit, Steinway-Konzertflügel im theatralischen Licht.
+2. **Chapter 02 — The First Note:** Asymmetrische Biografiekomposition (Moldawien, Robert Schumann Hochschule, Meisterdiplom).
+3. **Chapter 03 — The Art of Piano:** GSAP ScrollTrigger Pinned Sequence (4 Stufen der Virtuosität).
+4. **Chapter 04 — Breaking the Score:** Der Crossover-Bruch («Some boundaries were never meant to be heard»), 4-Oktaven-Stimme.
+5. **Chapter 05 — The Music:** Verifizierte Diskografie (*My Piano And I*, *Liebestraum*, *I Believe In You*) mit Hörproben.
+6. **Chapter 06 — The Stage:** Live-Auftritte (Silvester am Brandenburger Tor vor Millionen Zuschauern, Schloss Burg, Philharmonie).
+7. **Chapter 07 — The Finale:** Epilog und diskretes Kontakt- und Buchungsformular für Engagements.
 
 ---
 
-## 2. Start & Medien-Pipeline
+## 🛠️ Technologie-Stack
+
+- **Framework:** Next.js 14 (App Router) & React 18
+- **Sprache:** TypeScript 5.5 (Strict Mode, 0 Type-Errors)
+- **Styling:** Tailwind CSS mit Custom Concert-Hall Tokens
+- **Animationen:** GSAP 3.15.1 mit `@gsap/react` und `ScrollTrigger`
+- **Smooth Scroll:** `@studio-freight/lenis` (v1.3.27)
+- **Typografie:** Google Fonts (`Cormorant Garamond` & `Inter`)
+- **Audio:** Web Audio API (Konzertsaal-Resonanz 432 Hz / 440 Hz)
+
+---
+
+## 🚀 Installation & Lokaler Start
 
 ```bash
-# Entwicklungsserver auf Port 3031 starten (http://localhost:3031)
+# 1. Repository klonen
+git clone https://github.com/theo-teo/elena-nuzman.git
+cd elena-nuzman
+
+# 2. Abhängigkeiten installieren
+npm install
+
+# 3. Lokalen Entwicklungsserver starten
 npm run dev
+# Die Seite läuft unter http://localhost:3000 (oder 3031 falls belegt)
 
-# Produktions-Build prüfen (First Load JS ~115 kB)
+# 4. Production Build testen
 npm run build
-
-# Medien-Pipeline (Echte Fotos/Cover -> WebP, Flux Kontext Stills, Kling 2.5 Kurzvideos)
-node scripts/master_media_pipeline.mjs real
-node scripts/master_media_pipeline.mjs stills
-node scripts/master_media_pipeline.mjs videos
+npm start
 ```
+
+---
+
+## 🌐 Deployment (Vercel)
+
+Das Repository ist direkt auf GitHub unter [`https://github.com/theo-teo/elena-nuzman`](https://github.com/theo-teo/elena-nuzman) bereitgestellt.
+
+### 1-Klick Vercel Deployment:
+1. Öffnen Sie das [Vercel Dashboard](https://vercel.com/new).
+2. Wählen Sie das Repository `theo-teo/elena-nuzman` aus.
+3. Klicken Sie auf **Deploy**. Keine Umgebungsvariablen erforderlich.
+
+Alternativ via Terminal:
+```bash
+npx vercel --prod
+```
+
+---
+
+## 📜 Lizenz & Urheberrecht
+
+© 2025 Elena Nuzman. Alle Rechte vorbehalten.  
+Design & Creative Engineering: *We are telling stories, not building websites.*
